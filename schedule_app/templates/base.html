@@ -5,14 +5,16 @@
     <meta charset="utf-8" />
     <title>Schedule</title>
     <meta name="description" content="Description Goes Here" />
-    <link href="" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap">
+
   </head>
   <body>
     <h1>Login</h1>
-    <div>Please sign in to continue</div>
+    
     <form action="" method="post">
       {% csrf_token %}
-
+      <div>Please sign in to continue</div> 
       {{ form.as_p }}
       <label for="email">email:</label>
       <input type="text" id="username" name="username" required><br>
