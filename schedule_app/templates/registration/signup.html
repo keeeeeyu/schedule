@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+    <h1>Create Account</h1>
+        
+    <form action="" method="post">
+      {% csrf_token %}
+
+      {{ form.as_p }}
+      <label for="firstname">First Name:</label>
+      <input type="text" id="firstname" name="firstname" required title="First name is requried"><br>
+
+      <label for="lastname">Last Name:</label>
+      <input type="text" id="lastname" name="lastname" required title="Last name is required"><br>
+      
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" required title="Email is required"><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$" title="Password must contain at least one uppercase letter, one number, and one special character (!@#$%^&*), and be at least 8 characters long"><br>
+
+      <input type="submit" value="signup">
+      <div>Already have an account? <a href="{% url 'home' %}">Sign In</a></div>
+
+    
+</body>
+</html>

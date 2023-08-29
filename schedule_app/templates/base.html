@@ -14,14 +14,14 @@
       {% csrf_token %}
 
       {{ form.as_p }}
-      <label for="username">Username:</label>
+      <label for="email">email:</label>
       <input type="text" id="username" name="username" required><br>
 
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required><br>
 
       <input type="submit" value="Login">
-      <div>Dont't have an account? <a href="">Sign up</a></div>
+      <div>Dont't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
     </form>
     <script src=""></script>
   </body>
