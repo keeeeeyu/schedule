@@ -19,6 +19,7 @@ h1 {
     outline: none;
     transition: border-color 0.3s;
     width: 200px;
+    position: relative;
 }
 
 .styled-input:focus {
@@ -27,18 +28,20 @@ h1 {
 
 .styled-button {
     display: block;
+    border: none;
     margin: 0 auto;
-    padding: 5px 10px;
+    padding: 10px 20px;
     margin-top: 30px;
     margin-bottom: 10px;
     border-radius: 10px;
     border-width: 1px;
     transition: background-color 0.5s;
+    background-color: #ff5349;
+    font-size: 15px;
 }
 
 .styled-button:hover {
-    background-color: #ff5349;
-    border: none;
+    transform: scale(1.03);
 }
 
 @media (max-width:768px) {
