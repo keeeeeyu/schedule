@@ -16,11 +16,9 @@
       {% csrf_token %}
       <div>Please sign in to continue</div> 
       {{ form.as_p }}
-      <label for="email">email:</label>
-      <input type="text" id="username" name="username" required><br>
+      <input class="styled-input" type="text" name="email" placeholder="Email" required><br>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required><br>
+      <input class="styled-input" type="password" name="password" placeholder="Password" required><br>
 
       <input type="submit" value="Login">
       <div>Dont't have an account? <a href="{% url 'signup' %}">Sign up</a></div>

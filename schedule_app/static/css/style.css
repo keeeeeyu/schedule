@@ -4,9 +4,26 @@ body {
     height: 50vh;
     margin: 0;
     font-family: 'Raleway', sans-serif;
-}
+};
 
 h1 {
     font-family: 'Raleway', sans-serif;
     font-weight: 700;
-}
+};
+
+.styled-input {
+    border: none;
+    border-bottom: 1px solid #000; /* You can change the color here */
+    padding: 15px; /* Add some padding for spacing */
+    outline: none; /* Remove the default focus outline */
+    transition: border-color 0.3s; /* Add a transition effect */
+    width: 200px;
+};
+
+.styled-input:focus {
+    border-color: #00f; /* Change the line color on focus */
+};
+
+.styled-button {
+    
+};
