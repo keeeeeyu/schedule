@@ -9,19 +9,20 @@ body {
 h1 {
     font-family: 'Raleway', sans-serif;
     font-weight: 700;
+    color: #ff5349;
 }
 
 .styled-input {
     border: none;
-    border-bottom: 1px solid #000; /* You can change the color here */
-    padding: 15px; /* Add some padding for spacing */
-    outline: none; /* Remove the default focus outline */
-    transition: border-color 0.3s; /* Add a transition effect */
+    border-bottom: 1px solid #000;
+    padding: 15px;
+    outline: none;
+    transition: border-color 0.3s;
     width: 200px;
 }
 
 .styled-input:focus {
-    border-color: #00f; /* Change the line color on focus */
+    border-color: #ff5349; /* change the line of the input*/
 }
 
 .styled-button {
@@ -32,6 +33,12 @@ h1 {
     margin-bottom: 10px;
     border-radius: 10px;
     border-width: 1px;
+    transition: background-color 0.5s;
+}
+
+.styled-button:hover {
+    background-color: #ff5349;
+    border: none;
 }
 
 @media (max-width:768px) {
