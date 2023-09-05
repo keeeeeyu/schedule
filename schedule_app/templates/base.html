@@ -1,27 +1,41 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Schedule</title>
     <meta name="description" content="Description Goes Here" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap">
-
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
+    />
   </head>
   <body>
     <h1>Login</h1>
-    
+
     <form action="" method="post">
       {% csrf_token %}
-      <div>Please sign in to continue</div> 
+      <div>Please sign in to continue</div>
       {{ form.as_p }}
-      <input class="styled-input" type="text" name="email" placeholder="Email" required><br>
+      <input
+        class="styled-input"
+        type="text"
+        name="email"
+        placeholder="Email"
+        required
+      /><br />
 
-      <input class="styled-input" type="password" name="password" placeholder="Password" required><br>
+      <input
+        class="styled-input"
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+      /><br />
 
-      <input class="styled-button" type="submit" value="Log in">
-     
+      <input class="styled-button" type="submit" value="Log in" />
     </form>
     <div>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
     <script src=""></script>
