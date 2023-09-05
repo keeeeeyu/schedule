@@ -1,0 +1,51 @@
+body {
+    display: grid;
+    place-items: center;
+    height: 50vh;
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    color: #ff5349;
+}
+
+.styled-input {
+    border: none;
+    border-bottom: 1px solid #000;
+    padding: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 200px;
+    position: relative;
+}
+
+.styled-input:focus {
+    border-color: #ff5349; /* change the line of the input*/
+}
+
+.styled-button {
+    display: block;
+    border: none;
+    margin: 0 auto;
+    padding: 10px 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-width: 1px;
+    transition: background-color 0.5s;
+    background-color: #ff5349;
+    font-size: 15px;
+}
+
+.styled-button:hover {
+    transform: scale(1.03);
+}
+
+@media (max-width:768px) {
+    body {
+        height: 100vh;
+    }
+}

@@ -16,3 +16,7 @@ def returnRegisterPage(request):
             form.save()
     context = {'form': form}
     return render(request, 'register.html', context)
+
+
+def signup(request):
+    return render(request, 'registration/signup.html')
