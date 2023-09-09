@@ -16,9 +16,7 @@ def signup(request):
         print("method is post")
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            print("form is valid")
             form.save()
-        else:
-            print("form isnt valid")
+            return redirect('home')
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
