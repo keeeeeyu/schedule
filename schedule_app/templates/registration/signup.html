@@ -1,33 +1,66 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
+    />
     <title>Sign Up</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Create Account</h1>
-        
-    <form action="" method="post">
-      {% csrf_token %}
 
-      {{ form.as_p }}
-      <input class="styled-input" type="text" id="firstname" name="firstname" placeholder="First name" required title="First name is requried"><br>
+    <form action="" method="POST" class="styled-input">
+      {% csrf_token %} {{form.username.label}} <br />{{form.username}}
+      <br />{{form.first_name.label}} {{form.first_name}}
+      <br />{{form.last_name.label}} {{form.last_name}}
+      <br />{{form.email.label}} {{form.email}} <br />{{form.password1.label}}
+      {{form.password1}} <br />{{form.password2.label}} {{form.password2}}
 
-      <input class="styled-input" type="text" id="lastname" name="lastname" placeholder="Last name" required title="Last name is required"><br>
-      
-      <input class="styled-input" type="text" id="email" name="email" placeholder="Email" required title="Email is required"><br>
+      <input
+        class="styled-input"
+        type="text"
+        id="firstname"
+        name="firstname"
+        placeholder="First name"
+        title="First name is requried"
+      /><br />
 
-      <input class="styled-input" type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$" title="Password must contain at least one uppercase letter, one number, and one special character (!@#$%^&*), and be at least 8 characters long"><br>
+      <input
+        class="styled-input"
+        type="text"
+        id="lastname"
+        name="lastname"
+        placeholder="Last name"
+        title="Last name is required"
+      /><br />
 
-      <input class="styled-button" type="submit" value="Sign up">
-      </form>
-      <div>Already have an account? <a href="{% url 'home' %}">Sign In</a></div>
+      <input
+        class="styled-input"
+        type="text"
+        id="email"
+        name="email"
+        placeholder="Email"
+        title="Email is required"
+      /><br />
 
-    
-</body>
+      <input
+        class="styled-input"
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+        title="Password must contain at least one uppercase letter, one number, and one special character (!@#$%^&*), and be at least 8 characters long"
+      /><br />
+
+      <input class="styled-button" type="submit" value="Sign up" />
+    </form>
+    <div>Already have an account? <a href="{% url 'home' %}">Sign In</a></div>
+  </body>
 </html>
