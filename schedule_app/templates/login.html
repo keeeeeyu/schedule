@@ -22,8 +22,8 @@
       <input
         class="styled-input"
         type="text"
-        name="email"
-        placeholder="Email"
+        name="username"
+        placeholder="Username"
         required
       /><br />
 
@@ -37,6 +37,10 @@
 
       <input class="styled-button" type="submit" value="Log in" />
     </form>
+
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
     <div>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
     <script src=""></script>
   </body>
