@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from .forms import CreateUserForm
 
 
+@login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -25,7 +27,7 @@ def loginPage(request):
             messages.info(request, 'Username OR Password is incorrect')
 
     context = {}
-    return render(request, 'login.html', context)
+    return render(request, 'registration/login.html', context)
 
 
 def logoutUser(request):
@@ -45,3 +47,7 @@ def signup(request):
             return redirect('login')
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
+
+
+def timesheets(request):
+    return render(request, 'account/timesheets.html')
