@@ -11,12 +11,12 @@
       href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
     />
     <title>Home</title>
+    {% block mycss %} {% endblock mycss %}
   </head>
   <body>
-    <h1>Navbar</h1>
-    <a href="{% url 'logout' %}">Logout </a>
+    {% include 'navbar.html' %}
     {% block content%}
-
+    {% include 'clock.html' %}
     {% endblock %}
     <h1>Footer</h1>
   </body>
