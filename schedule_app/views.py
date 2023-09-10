@@ -42,6 +42,6 @@ def signup(request):
             form.save()
             user = form.cleaned_data.get('username')
             messages.success(request, "Account was created for " + user)
-            return redirect('home')
+            return redirect('login')
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
