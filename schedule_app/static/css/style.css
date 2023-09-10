@@ -6,6 +6,10 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
+.registration {
+    display: grid;
+}
+
 h1 {
     font-family: 'Raleway', sans-serif;
     font-weight: 700;
