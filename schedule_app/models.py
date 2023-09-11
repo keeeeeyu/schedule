@@ -17,8 +17,8 @@ class User(models.Model):
 
 
 class User_worktime(models.Model):
-    clock_in = models.DateTimeField()
-    clock_out = models.DateTimeField()
+    clock_in = models.DateTimeField(null=true, blank=true)
+    clock_out = models.DateTimeField(null=true, blank=true)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 
