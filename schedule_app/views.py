@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.utils import timezone
+from .models import User_worktime
 
 # Create your views here.
 from .forms import CreateUserForm
@@ -45,3 +47,8 @@ def signup(request):
             return redirect('login')
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
+
+def clock_in(request):
+    user = request.user
+    clock_in_time = timezone.now()
+    User_worktime.objects.create(user=user, clock_in_time=clock_in_time)
