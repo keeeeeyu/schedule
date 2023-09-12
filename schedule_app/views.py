@@ -52,8 +52,12 @@ def signup(request):
 
 def clock_in(request):
     if request.method == 'POST':
-        user = request.user
-        clock_in_time = timezone.now()
-        clocked_in = User_worktime.objects.create(user=user, clock_in=clock_in_time)
-        clocked_in.save()
-    return render(request,'home.html', {'clock_in_time': clock_in_time, 'user':user})
+        if request.user.is_authenticated:
+            user = request.user
+            clock_in_time = timezone.now()
+            clocked_in = User_worktime.objects.create(user=user, clock_in=clock_in_time)
+            clocked_in.save()
+            messages.success(request, 'Clock-in successful.')
+        else:
+            messages.error(request, 'You must be logged in to clock in.')
+    return render(request,'home.html', {'user':user, 'clocked_in': clocked_in})
