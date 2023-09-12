@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from .models import User_worktime
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from .forms import CreateUserForm
@@ -48,7 +49,11 @@ def signup(request):
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
 
+
 def clock_in(request):
-    user = request.user
-    clock_in_time = timezone.now()
-    User_worktime.objects.create(user=user, clock_in_time=clock_in_time)
+    if request.method == 'POST':
+        user = request.user
+        clock_in_time = timezone.now()
+        clocked_in = User_worktime.objects.create(user=user, clock_in=clock_in_time)
+        clocked_in.save()
+    return render(request,'home.html', {'clock_in_time': clock_in_time, 'user':user})

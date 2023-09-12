@@ -11,8 +11,10 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
     />
+    <title>Schedule App</title>
   </head>
   <body>
+    {% block content %}
     <h1>Login</h1>
 
     <form action="" method="post">
@@ -36,6 +38,7 @@
     <p>{{message}}</p>
     {% endfor %}
     <div>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
+    {% endblock content %}
     <script src=""></script>
   </body>
 </html>
