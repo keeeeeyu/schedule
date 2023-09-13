@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
-from .models import User_worktime
+from .models import User_worktime, User
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -50,14 +50,20 @@ def signup(request):
     return render(request, 'registration/signup.html', context)
 
 
-def clock_in(request):
+def clock_in(request, user_id):
+    print(user_id)
+
+
+   
+    
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            user = request.user
-            clock_in_time = timezone.now()
-            clocked_in = User_worktime.objects.create(user=user, clock_in=clock_in_time)
-            clocked_in.save()
-            messages.success(request, 'Clock-in successful.')
-        else:
-            messages.error(request, 'You must be logged in to clock in.')
-    return render(request,'home.html', {'user':user, 'clocked_in': clocked_in})
+        user = request.user
+        clock_in_time = timezone.now()
+        clock_out_time = timezone.now()
+        clocked_in = User_worktime.objects.create(user=user,clock_in=clock_in_time, clock_out=clock_out_time)
+        clocked_in.save()
+        print('clock in ---->', User_worktime.objects.get(clock_in))
+        messages.success(request, 'Clock-in successful.')
+    else:
+        messages.error(request, 'You must be logged in to clock in.')
+    return render(request,'home.html')
