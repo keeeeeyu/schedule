@@ -50,15 +50,29 @@ def signup(request):
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
 
-
+@login_required
 def clock_in(request):
     if request.method == 'POST':
-        user = request.user
-        print('here',user.first_name)
-        clock_in_time = timezone.now()
-        clocked_in = User_worktime.objects.create(user=user,clock_in=clock_in_time)
-        clocked_in.save()
-        messages.success(request, 'Clock-in successful.')
-    else:
-        messages.error(request, 'You must be logged in to clock in.')
+        last_entry = User_worktime.objects.filter(user=request.user).last()
+        if last_entry.clock_in is None:
+            user = request.user
+            clock_in_time = timezone.now()
+            clocked_in = User_worktime.objects.create(user=user,clock_in=clock_in_time)
+            clocked_in.save()
+            messages.success(request, 'Clock-in successful.')
+        else:
+            messages.error(request, 'You are already clocked in.')
+    return render(request,'home.html')
+
+@login_required
+def clock_out(request):
+    if request.method == 'POST':
+        last_entry = User_worktime.objects.filter(user=request.user).last()
+        if last_entry.clock_out is None:
+            clock_out_time = timezone.now()
+            last_entry.clock_out = clock_out_time
+            last_entry.save()
+            messages.success(request, 'Clock-out successful.')
+        else:
+            messages.error(request, 'You are already clocked out.')
     return render(request,'home.html')
