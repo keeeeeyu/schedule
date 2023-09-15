@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -14,69 +15,72 @@
   </head>
   <body class="registration">
     <h1>Create Account</h1>
+=======
+{% extends 'login.html' %} {% block content %}
+<h1>Create Account</h1>
+>>>>>>> main
 
-    <form action="" method="POST" class="styled-input">
-      {% csrf_token %}
+<form action="" method="POST" class="styled-input">
+  {% csrf_token %}
 
-      <input
-        class="styled-input"
-        type="text"
-        id="username"
-        name="username"
-        placeholder="Username"
-        title="Username is requried"
-      /><br />
+  <input
+    class="styled-input"
+    type="text"
+    id="username"
+    name="username"
+    placeholder="Username"
+    title="Username is requried"
+  /><br />
 
-      <input
-        class="styled-input"
-        type="text"
-        id="first_name"
-        name="first_name"
-        placeholder="First name"
-        title="First name is requried"
-      /><br />
+  <input
+    class="styled-input"
+    type="text"
+    id="first_name"
+    name="first_name"
+    placeholder="First name"
+    title="First name is requried"
+  /><br />
 
-      <input
-        class="styled-input"
-        type="text"
-        id="last_name"
-        name="last_name"
-        placeholder="Last name"
-        title="Last name is required"
-      /><br />
+  <input
+    class="styled-input"
+    type="text"
+    id="last_name"
+    name="last_name"
+    placeholder="Last name"
+    title="Last name is required"
+  /><br />
 
-      <input
-        class="styled-input"
-        type="text"
-        id="email"
-        name="email"
-        placeholder="Email"
-        title="Email is required"
-      /><br />
+  <input
+    class="styled-input"
+    type="text"
+    id="email"
+    name="email"
+    placeholder="Email"
+    title="Email is required"
+  /><br />
 
-      <input
-        class="styled-input"
-        type="password"
-        id="password1"
-        name="password1"
-        placeholder="Password"
-        pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
-        title="Password must contain at least one uppercase letter, one number, and one special character (!@#$%^&*), and be at least 8 characters long"
-      /><br />
+  <input
+    class="styled-input"
+    type="password"
+    id="password1"
+    name="password1"
+    placeholder="Password"
+    pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+    title="Password must contain at least one uppercase letter, one number, and one special character (!@#$%^&*), and be at least 8 characters long"
+  /><br />
 
-      <input
-        class="styled-input"
-        type="password"
-        id="password2"
-        name="password2"
-        placeholder="Password confirmation"
-        pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
-        title="Password must match"
-      /><br />
+  <input
+    class="styled-input"
+    type="password"
+    id="password2"
+    name="password2"
+    placeholder="Password confirmation"
+    pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+    title="Password must match"
+  /><br />
 
-      <input class="styled-button" type="submit" value="Sign up" />
-    </form>
-    {{form.errors}}
-    <div>Already have an account? <a href="{% url 'login' %}">Sign In</a></div>
-  </body>
-</html>
+  <input class="styled-button" type="submit" value="Sign up" />
+</form>
+{{form.errors}}
+<div>Already have an account? <a href="{% url 'login' %}">Sign In</a></div>
+{% endblock content %}

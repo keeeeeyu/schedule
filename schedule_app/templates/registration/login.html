@@ -11,8 +11,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
     />
+    <title>Schedule App</title>
   </head>
+<<<<<<< HEAD:schedule_app/templates/registration/login.html
   <body class="registration">
+=======
+  <body>
+    {% block content %}
+>>>>>>> main:schedule_app/templates/login.html
     <h1>Login</h1>
 
     <form action="" method="post">
@@ -27,13 +33,7 @@
         required
       /><br />
 
-      <input
-        class="styled-input"
-        type="password"
-        name="password"
-        placeholder="Password"
-        required
-      /><br />
+      <input class="styled-input" type="password" name="password" placeholder="Password" required/><br />
 
       <input class="styled-button" type="submit" value="Log in" />
     </form>
@@ -42,6 +42,7 @@
     <p>{{message}}</p>
     {% endfor %}
     <div>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
+    {% endblock content %}
     <script src=""></script>
   </body>
 </html>
