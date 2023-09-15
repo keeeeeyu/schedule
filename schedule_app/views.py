@@ -55,6 +55,7 @@ def signup(request):
     return render(request, 'registration/signup.html', context)
 
 
+@login_required
 def timesheets(request):
     return render(request, 'account/timesheets.html')
 
@@ -87,6 +88,7 @@ def clock_out(request):
             last_entry.save()
             messages.success(
                 request, f'Clock-out ({clock_out_time}) successful.')
+            messages.error(request, 'Error')
         else:
             messages.error(request, 'You are already clocked out.')
     return render(request, 'home.html')

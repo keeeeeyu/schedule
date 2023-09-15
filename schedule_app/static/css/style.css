@@ -83,6 +83,25 @@ h1 {
     color: white;
 }
 
+/* CLOCK IN & OUT */
+.clock {
+    /* background-color: blue; */
+    margin: 15px;
+    display: grid;
+    text-align: center;
+}
+
+/* FOOTER */
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #ff5349;
+    color: white;
+    text-align: center;
+}
+
 @media (max-width:768px) {
     body {
         height: 100vh;
