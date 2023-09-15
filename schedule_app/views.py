@@ -54,6 +54,7 @@ def signup(request):
 def clock_in(request):
     if request.method == 'POST':
         last_entry = User_worktime.objects.filter(user=request.user).last()
+        print('last entry',last_entry)
         if last_entry.clock_in and last_entry.clock_out is not None:
             user = request.user
             clock_in_time = timezone.now()
@@ -72,7 +73,7 @@ def clock_out(request):
             clock_out_time = timezone.now()
             last_entry.clock_out = clock_out_time
             last_entry.save()
-            messages.success(request, 'Clock-out successful.')
+            messages.success(request, f'Clock-out ({clock_out_time}) successful.')
         else:
             messages.error(request, 'You are already clocked out.')
     return render(request,'home.html')
