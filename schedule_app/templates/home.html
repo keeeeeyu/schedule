@@ -1,9 +1,15 @@
 <h1>HOME</h1>
-
+<h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+</h2>
 <a href="{% url 'logout' %}">Logout </a>
 <form action="{% url 'clock_in' %}" method="POST">
     {% csrf_token %}
-<button type="submit">Clock In</button>
+    <button type="submit">Clock In</button>
 </form>
 <form action="{% url 'clock_out' %}" method="POST">
     {% csrf_token %}
