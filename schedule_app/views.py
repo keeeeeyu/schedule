@@ -3,14 +3,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .forms import CreateUserForm
+from django.utils import timezone
 
 # Create your views here.
-from .forms import CreateUserForm
 
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    current_time = timezone.now()
+    return render(request, 'home.html', {'current_time': current_time})
 
 
 def loginPage(request):
