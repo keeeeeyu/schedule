@@ -1,9 +1,13 @@
 body {
-    display: grid;
+    /* display: grid; */
     place-items: center;
     height: 50vh;
     margin: 0;
     font-family: 'Raleway', sans-serif;
+}
+
+.registration {
+    display: grid;
 }
 
 h1 {
@@ -23,7 +27,8 @@ h1 {
 }
 
 .styled-input:focus {
-    border-color: #ff5349; /* change the line of the input*/
+    border-color: #ff5349;
+    /* change the line of the input*/
 }
 
 .styled-button {
@@ -42,6 +47,59 @@ h1 {
 
 .styled-button:hover {
     transform: scale(1.03);
+}
+
+/* NAVBAR */
+
+.navbar {
+    background-color: #ff5349;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 10px 10px;
+}
+
+.navbar ul {
+    margin: 0 0;
+    list-style: none;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.navbar a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+/* CLOCK IN & OUT */
+.clock {
+    /* background-color: blue; */
+    margin: 15px;
+    display: grid;
+    text-align: center;
+}
+
+/* FOOTER */
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #ff5349;
+    color: white;
+    text-align: center;
 }
 
 @media (max-width:768px) {
