@@ -10,11 +10,11 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 from .forms import CreateUserForm
 
-@login_required
+
 def home(request):
     return render(request, 'home.html')
 
-@login_required
+
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
