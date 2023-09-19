@@ -3,4 +3,22 @@
 {% block content %}
 <h2>Timesheets</h2>
 
+<div>{{ first_name }} {{ last_name }}</div>
+<ol>
+    {% for clock_in in clock_ins %}
+        <li>{{ clock_in }}</li>
+    {% endfor %}
+</ol>
+<ol>
+    {% for clock_out in clock_outs  %}
+        <li>{{ clock_out }}</li>
+    {% endfor %}
+</ol>
+<ol>
+    
+    {% for hours in work_hours %}
+        <li>{{ hours }}</li>
+    {% endfor %}
+        
+</ol>
 {% endblock %}

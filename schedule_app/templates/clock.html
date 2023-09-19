@@ -1,26 +1,28 @@
 {% load tz %}
 <div class="clock">
-<div>
-    <h2>Location</h2>
-</div>
-<div>
-    <p>{{ current_time|localtime }}</p>
-</div>
-<div>
-<h2>
-    {% if messages %}
-        {% for message in messages %}
-            <div>{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-</h2>
-<form action="{% url 'clock_in' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">Clock In</button>
-</form>
-<form action="{% url 'clock_out' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">Clock Out</button>
-</form>
-</div>                
+    <div>
+        <h2>Location</h2>
+    </div>
+    <div>
+        <p>{{ current_time|localtime }}</p>
+    </div>
+    <div>
+        <div>
+            <p>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            </p>
+        </div>
+        <form action="{% url 'clock_in' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Clock In</button>
+        </form>
+        <form action="{% url 'clock_out' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Clock Out</button>
+        </form>
+    </div>                
 </div>
