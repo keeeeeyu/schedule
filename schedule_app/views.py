@@ -5,18 +5,24 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from django.utils import timezone
 from .models import User_worktime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, date
 
 # Create your views here.
 
 
 @login_required
 def home(request):
-    current_time = timezone.now()
-    return render(request, 'home.html', {'current_time': current_time})
+    now = datetime.now()
+    date_today = now.date()
+    time_now = now.strftime("%I:%M %p")
+    context = {
+        'time_now': time_now,
+        'date_today': date_today
+    }
+    return render(request, 'home.html', context)
 
 
 def loginPage(request):
@@ -28,7 +34,14 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            last_entry = User_worktime.objects.filter(user=request.user).last()
+            current_date = date.today()
+            if last_entry is not None:
+                last_entry_date = last_entry.clock_in.date()
+                if current_date == last_entry_date:
+                    return redirect('break')
+            else:
+                return redirect('home')
         else:
             messages.info(request, 'Username OR Password is incorrect')
 
@@ -84,7 +97,7 @@ def clock_in(request):
                 request, f'Clock-in ({clock_in_time}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'home.html')
+    return render(request, 'break.html')
 
 
 @login_required
@@ -101,3 +114,8 @@ def clock_out(request):
         else:
             messages.error(request, 'You are already clocked out.')
     return render(request, 'home.html')
+
+
+@login_required
+def break_time(request):
+    return render(request, 'break.html')

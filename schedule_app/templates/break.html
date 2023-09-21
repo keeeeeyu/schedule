@@ -1,0 +1,15 @@
+{% extends 'home.html' %} 
+<h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+</h2>
+{% block content %}
+<h2>Break</h2>
+<form action="{% url 'clock_out' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Clock Out</button>
+
+{% endblock %}

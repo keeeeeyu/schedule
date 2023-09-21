@@ -10,8 +10,14 @@ class User_worktime(models.Model):
     clock_out = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f'{self.clock_in}'
+
 
 class User_breaktime(models.Model):
-    clock_in = models.DateTimeField()
-    clock_out = models.DateTimeField()
+    break_out = models.DateTimeField()
+    break_in = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f'{self.break_out}'
