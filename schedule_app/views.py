@@ -8,6 +8,7 @@ from django.utils import timezone
 from .models import User_worktime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from datetime import timedelta
 
 # Create your views here.
 
@@ -102,23 +103,27 @@ def clock_out(request):
 
 @login_required
 def timesheets(request):
+    user = request.user
     first_name = request.user.first_name
     last_name = request.user.last_name
-    clock_ins = User_worktime.objects.values_list('clock_in', flat=True)
-    clock_outs = User_worktime.objects.values_list('clock_out', flat=True)
-    work_hours = []
-    for clock_in, clock_out in zip(clock_ins, clock_outs):
-        if clock_in and clock_out:
-            # Calculate the time difference between clock-in and clock-out
-            time_worked = clock_out - clock_in
-
-            # Extract the hours and minutes worked
-            hours_worked = divmod(time_worked.total_seconds(), 3600)
-
-            # Append the formatted work hours to the list
-            work_hours.append(hours_worked)
-        else:
-            work_hours.append('N/A')  # No clock-in or clock-out time
-            
-        context = {'first_name': first_name, 'last_name': last_name, 'clock_ins': clock_ins, 'clock_outs': clock_outs, 'work_hours': work_hours}
+    clock_ins = User_worktime.objects.filter(user=user).order_by('-clock_in').values_list('clock_in', flat=True)
+    clock_outs = User_worktime.objects.filter(user=user).order_by('-clock_out').values_list('clock_out', flat=True)
+    worktimes = User_worktime.objects.filter(user=user).order_by('-clock_in')
+    total_work_hours = timedelta() # Initialize total work hours
+    
+    for worktime in worktimes:
+        if worktime.clock_out:
+            time_worked = worktime.clock_out - worktime.clock_in
+            total_work_hours += time_worked
+    total_convert = round(total_work_hours.total_seconds() / 3600, 1)
+    print('here',time_worked)
+    print('total time', total_convert)
+    context = {
+        'first_name': first_name,
+        'last_name': last_name,
+        'clock_ins': clock_ins,
+        'clock_outs': clock_outs,
+        'total_convert': total_convert
+        }
+        
     return render(request, 'account/timesheets.html', context)
