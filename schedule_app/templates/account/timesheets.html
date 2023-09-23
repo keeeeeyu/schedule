@@ -20,8 +20,10 @@
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Hours</div>
-        
+            <div class = 'timesheet-label'>Hours</div>
+            {% for work_hour in work_hours %}
+                <li>{{ work_hour }}</li>
+        {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
         <div class = 'timesheet-label'>Total Hours</div>
