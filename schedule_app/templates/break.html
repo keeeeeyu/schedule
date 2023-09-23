@@ -8,6 +8,10 @@
 </h2>
 {% block content %}
 <h2>Break</h2>
+<form action="{% url 'break_out' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Break Out</button>
+</form>
 <form action="{% url 'clock_out' %}" method="POST">
     {% csrf_token %}
     <button type="submit">Clock Out</button>

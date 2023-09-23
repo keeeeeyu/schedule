@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime
+from .models import User_worktime, User_breaktime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
@@ -119,3 +119,28 @@ def clock_out(request):
 @login_required
 def break_time(request):
     return render(request, 'break.html')
+
+
+@login_required
+def break_out(request):
+    # current_time = timezone.now() WHY IS THIS 7 HOURS AHEAD?????
+    now = datetime.now()
+    if request.method == 'POST':
+        last_entry = User_breaktime.objects.filter(user=request.user).last()
+        if last_entry == None:
+            user = request.user
+            out = timezone.now()
+            break_out = User_breaktime.objects.create(
+                user=user, break_out=out)
+            break_out.save()
+            messages.success(
+                request, f'Break out ({now.time()}) successful.')
+        elif last_entry.break_in == None:
+            out = User_breaktime.objects.get(id=last_entry.id)
+            break_in = timezone.now()
+            out.break_in = break_in
+            out.save()
+            messages.success(
+                request, f'Break in ({now.time()}) successful.')
+            print("BREAK IN at", now.time())
+    return render(request, 'home.html')
