@@ -2,24 +2,30 @@
 
 {% block content %}
 <h2>Timesheets</h2>
-
-<div>{{ first_name }} {{ last_name }}</div>
-<ol>
-    {% for clock_in in clock_ins %}
-        <li>{{ clock_in }}</li>
-    {% endfor %}
-</ol>
-<ol>
-    {% for clock_out in clock_outs  %}
-        <li>{{ clock_out }}</li>
-    {% endfor %}
-</ol>
-
-</ol>
-<ol>
-    
-    <li>{{ total_convert }}</li>
-
+<div class = 'timesheet-container'>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Name</div>
+        <div>{{ first_name }} {{ last_name }}</div>
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Clock In</div>
+        {% for clock_in in clock_ins %}
+            <li>{{ clock_in }}</li>
+        {% endfor %}
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Clock Out</div>
+        {% for clock_out in clock_outs  %}
+            <li>{{ clock_out }}</li>
+        {% endfor %}
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Hours</div>
         
-</ol>
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Total Hours</div>
+        <li>{{ total_hours }}</li>        
+    </ol>
+</div>
 {% endblock %}

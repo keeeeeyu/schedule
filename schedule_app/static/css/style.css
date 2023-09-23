@@ -91,6 +91,24 @@ h1 {
     text-align: center;
 }
 
+.timesheet-container {
+    display: flex; /* Use flex display for the container */
+    flex-direction: row;
+    justify-content: space-between; /* Distribute items evenly horizontally */
+    align-items: flex-start; /* Align items at the top of the container */
+}
+
+.timesheet-item {
+    flex: 1; /* Allow each item to grow and take an equal portion of space */
+    padding: 10px; /* Optional: Add spacing between items */
+    list-style-type: none;
+}
+
+.timesheet-label {
+    padding-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
 /* FOOTER */
 .footer {
     position: fixed;

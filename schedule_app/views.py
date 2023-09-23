@@ -109,21 +109,19 @@ def timesheets(request):
     clock_ins = User_worktime.objects.filter(user=user).order_by('-clock_in').values_list('clock_in', flat=True)
     clock_outs = User_worktime.objects.filter(user=user).order_by('-clock_out').values_list('clock_out', flat=True)
     worktimes = User_worktime.objects.filter(user=user).order_by('-clock_in')
-    total_work_hours = timedelta() # Initialize total work hours
-    
+    total_work_time = timedelta()
     for worktime in worktimes:
         if worktime.clock_out:
             time_worked = worktime.clock_out - worktime.clock_in
-            total_work_hours += time_worked
-    total_convert = round(total_work_hours.total_seconds() / 3600, 1)
-    print('here',time_worked)
-    print('total time', total_convert)
+            total_work_time += time_worked
+    total_hours = round(total_work_time.total_seconds() / 3600, 1)
+    
     context = {
         'first_name': first_name,
         'last_name': last_name,
         'clock_ins': clock_ins,
         'clock_outs': clock_outs,
-        'total_convert': total_convert
+        'total_hours': total_hours
         }
         
     return render(request, 'account/timesheets.html', context)
