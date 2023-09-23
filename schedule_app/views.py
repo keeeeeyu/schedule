@@ -104,8 +104,8 @@ def clock_out(request):
 @login_required
 def timesheets(request):
     user = request.user
-    first_name = request.user.first_name
-    last_name = request.user.last_name
+    first_name = request.user.first_name.capitalize()
+    last_name = request.user.last_name.capitalize()
     clock_ins = User_worktime.objects.filter(user=user).order_by('-clock_in').values_list('clock_in', flat=True)
     clock_outs = User_worktime.objects.filter(user=user).order_by('-clock_out').values_list('clock_out', flat=True)
     worktimes = User_worktime.objects.filter(user=user).order_by('-clock_in')

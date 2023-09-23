@@ -92,15 +92,15 @@ h1 {
 }
 
 .timesheet-container {
-    display: flex; /* Use flex display for the container */
+    display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Distribute items evenly horizontally */
-    align-items: flex-start; /* Align items at the top of the container */
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .timesheet-item {
-    flex: 1; /* Allow each item to grow and take an equal portion of space */
-    padding: 10px; /* Optional: Add spacing between items */
+    flex: 1;
+    padding: 10px;
     list-style-type: none;
 }
 
