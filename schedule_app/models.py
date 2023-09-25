@@ -4,7 +4,6 @@ from django.urls import reverse
 
 # Create your models here.
 
-
 class User_worktime(models.Model):
     clock_in = models.DateTimeField(null=True, blank=True)
     clock_out = models.DateTimeField(null=True, blank=True)
