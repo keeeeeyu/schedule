@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime
+from .models import User_worktime, User_breaktime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
@@ -15,8 +15,15 @@ from datetime import timedelta
 
 @login_required
 def home(request):
-    current_time = timezone.now()
-    return render(request, 'home.html', {'current_time': current_time})
+    now = timezone.localtime()
+    date_today = now.date()
+    time_now = now.strftime("%I:%M %p")
+    context = {
+        'time_now': time_now,
+        'date_today': date_today
+    }
+    print(request.user)
+    return render(request, 'home.html', context)
 
 
 def loginPage(request):
@@ -28,7 +35,18 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            last_entry = User_worktime.objects.filter(user=request.user).last()
+            current_date = timezone.localtime().date()
+            if last_entry is not None:
+                last_entry_date = last_entry.clock_in.date()
+                if current_date == last_entry_date:
+                    if last_entry.clock_out is not None:
+                        return redirect('home')
+                    messages.success(
+                        request, f'Clocked in at {last_entry.clock_in.time().strftime("%I:%M %p")}.')
+                    return redirect('break_time')
+            else:
+                return redirect('home')
         else:
             messages.info(request, 'Username OR Password is incorrect')
 
@@ -68,7 +86,7 @@ def clock_in(request):
         print('last entry', first_entry)
         if first_entry is None:
             user = request.user
-            clock_in_time = timezone.now()
+            clock_in_time = timezone.localtime()
             clocked_in = User_worktime.objects.create(
                 user=user, clock_in=clock_in_time)
             clocked_in.save()
@@ -76,7 +94,7 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.') 
         elif last_entry.clock_in and last_entry.clock_out is not None:
             user = request.user
-            clock_in_time = timezone.now()
+            clock_in_time = timezone.localtime()
             clocked_in = User_worktime.objects.create(
                 user=user, clock_in=clock_in_time)
             clocked_in.save()
@@ -92,7 +110,7 @@ def clock_out(request):
     if request.method == 'POST':
         last_entry = User_worktime.objects.filter(user=request.user).last()
         if last_entry.clock_out is None:
-            clock_out_time = timezone.now()
+            clock_out_time = timezone.localtime()
             last_entry.clock_out = clock_out_time
             last_entry.save()
             messages.success(
@@ -100,6 +118,31 @@ def clock_out(request):
         else:
             messages.error(request, 'You are already clocked out.')
     return render(request, 'home.html')
+
+@login_required
+def break_time(request):
+    last_entry = User_breaktime.objects.filter(user=request.user).last()
+    time_now = timezone.localtime().strftime("%I:%M %p")
+    if request.method == 'POST':
+        if last_entry is None or last_entry.break_out and last_entry.break_in is not None:
+            user = request.user
+            out = timezone.localtime()
+            break_out = User_breaktime.objects.create(
+                user=user, break_out=out)
+            break_out.save()
+            messages.success(
+                request, f'Break out ({time_now}) successful.')
+            return render(request, 'home.html')
+        elif last_entry.break_in == None:
+            out = User_breaktime.objects.get(id=last_entry.id)
+            break_in = timezone.localtime()
+            out.break_in = break_in
+            out.save()
+            print(messages)
+            messages.success(
+                request, f'Break in ({time_now}) successful.')
+            return render(request, 'home.html')
+    return render(request, 'break.html')
 
 @login_required
 def timesheets(request):

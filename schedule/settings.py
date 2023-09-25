@@ -78,6 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'schedule',
+        'TIME_ZONE': 'America/Los_Angeles',
     }
 }
 

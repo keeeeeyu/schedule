@@ -9,4 +9,5 @@ urlpatterns = [
     path('clock_in/', views.clock_in, name='clock_in'),
     path('clock_out/', views.clock_out, name='clock_out'),
     path('timesheets/', views.timesheets, name='timesheets'),
+    path('break_time/', views.break_time, name='break_time'),
 ]
