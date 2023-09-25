@@ -1,4 +1,9 @@
 {% extends 'home.html' %} 
+
+{% block content %}
+<div>
+    <h2>BREAK</h2>
+</div>
 <h2>
     {% if messages %}
         {% for message in messages %}
@@ -6,14 +11,9 @@
         {% endfor %}
     {% endif %}
 </h2>
-{% block content %}
-<h2>Break</h2>
-<form action="{% url 'break_out' %}" method="POST">
+<form action="{% url 'break_time' %}" method="POST">
     {% csrf_token %}
-    <button type="submit">Break Out</button>
+    <button type="submit">Break</button>
 </form>
-<form action="{% url 'clock_out' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">Clock Out</button>
 
 {% endblock %}
