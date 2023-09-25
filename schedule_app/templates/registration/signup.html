@@ -2,6 +2,7 @@
 {% block content %}
 <h1>Create Account</h1>
 
+
 <form action="" method="POST" class="styled-input">
   {% csrf_token %}
 
@@ -65,4 +66,4 @@
 </form>
 {{form.errors}}
 <div>Already have an account? <a href="{% url 'login' %}">Sign In</a></div>
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}
