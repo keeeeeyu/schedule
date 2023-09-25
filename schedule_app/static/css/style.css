@@ -91,6 +91,24 @@ h1 {
     text-align: center;
 }
 
+.timesheet-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.timesheet-item {
+    flex: 1;
+    padding: 10px;
+    list-style-type: none;
+}
+
+.timesheet-label {
+    padding-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
 /* FOOTER */
 .footer {
     position: fixed;
