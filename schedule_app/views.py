@@ -35,18 +35,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            last_entry = User_worktime.objects.filter(user=request.user).last()
-            current_date = timezone.localtime().date()
-            if last_entry is not None:
-                last_entry_date = last_entry.clock_in.date()
-                if current_date == last_entry_date:
-                    if last_entry.clock_out is not None:
-                        return redirect('home')
-                    messages.success(
-                        request, f'Clocked in at {last_entry.clock_in.time().strftime("%I:%M %p")}.')
-                    return redirect('break_time')
-            else:
-                return redirect('home')
+            return redirect('home')
         else:
             messages.info(request, 'Username OR Password is incorrect')
 
@@ -91,7 +80,7 @@ def clock_in(request):
                 user=user, clock_in=clock_in_time)
             clocked_in.save()
             messages.success(
-                request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.') 
+                request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         elif last_entry.clock_in and last_entry.clock_out is not None:
             user = request.user
             clock_in_time = timezone.localtime()
@@ -119,6 +108,7 @@ def clock_out(request):
             messages.error(request, 'You are already clocked out.')
     return render(request, 'home.html')
 
+
 @login_required
 def break_time(request):
     last_entry = User_breaktime.objects.filter(user=request.user).last()
@@ -144,13 +134,16 @@ def break_time(request):
             return render(request, 'home.html')
     return render(request, 'break.html')
 
+
 @login_required
 def timesheets(request):
     user = request.user
     first_name = request.user.first_name.capitalize()
     last_name = request.user.last_name.capitalize()
-    clock_ins = User_worktime.objects.filter(user=user).order_by('-clock_in').values_list('clock_in', flat=True)
-    clock_outs = User_worktime.objects.filter(user=user).order_by('-clock_out').values_list('clock_out', flat=True)
+    clock_ins = User_worktime.objects.filter(user=user).order_by(
+        '-clock_in').values_list('clock_in', flat=True)
+    clock_outs = User_worktime.objects.filter(user=user).order_by(
+        '-clock_out').values_list('clock_out', flat=True)
     worktimes = User_worktime.objects.filter(user=user).order_by('-clock_in')
     work_hours = []
     print(work_hours)
@@ -165,7 +158,7 @@ def timesheets(request):
         else:
             work_hours.append('N/A')
     total_hours = round(total_work_time.total_seconds() / 3600, 1)
-    
+
     context = {
         'first_name': first_name,
         'last_name': last_name,
@@ -174,6 +167,6 @@ def timesheets(request):
         'total_hours': total_hours,
         'worktimes': worktimes,
         'work_hours': work_hours
-        }
-        
+    }
+
     return render(request, 'account/timesheets.html', context)
