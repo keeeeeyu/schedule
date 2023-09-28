@@ -170,3 +170,12 @@ def timesheets(request):
     }
 
     return render(request, 'account/timesheets.html', context)
+
+
+@login_required
+def all_employees(request):
+    users = User.objects.all().values()
+    context = {
+        'users': users
+    }
+    return render(request, 'all_employees.html', context)
