@@ -176,6 +176,12 @@ def timesheets(request):
 def all_employees(request):
     users = User.objects.all().values()
     context = {
-        'users': users
+        'employees': users
     }
     return render(request, 'all_employees.html', context)
+
+
+@login_required
+def show_employee(request, employee_id):
+    employee = User.objects.get(id=employee_id)
+    return render(request, 'account/employee.html', {'employee': employee})
