@@ -10,4 +10,7 @@ urlpatterns = [
     path('clock_out/', views.clock_out, name='clock_out'),
     path('timesheets/', views.timesheets, name='timesheets'),
     path('break_time/', views.break_time, name='break_time'),
+    path('employees/', views.all_employees, name='all_employees'),
+    path('employees/<int:employee_id>',
+         views.show_employee, name='show_employee'),
 ]
