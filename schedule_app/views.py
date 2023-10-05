@@ -63,11 +63,6 @@ def signup(request):
 
 
 @login_required
-def timesheets(request):
-    return render(request, 'account/timesheets.html')
-
-
-@login_required
 def clock_in(request):
     if request.method == 'POST':
         first_entry = User_worktime.objects.filter(user=request.user).first()
@@ -185,3 +180,12 @@ def all_employees(request):
 def show_employee(request, employee_id):
     employee = User.objects.get(id=employee_id)
     return render(request, 'account/employee.html', {'employee': employee})
+
+
+@login_required
+def pick_date_range(request):
+    start_date = request.POST.get('start_date')
+    end_date = request.POST.get('end_date')
+
+    print(start_date, end_date)
+    return render(request, 'account/timesheets.html')
