@@ -4,5 +4,10 @@
 
 {% for employee in employees %}
             <li><a href="{% url 'show_employee' employee.id %}">{{employee.username}}</a></li>
+            {% if employee.is_staff %}
+                Manager
+            {% else %}
+                Employee
+            {% endif %}
 {% endfor %}
 {% endblock %}

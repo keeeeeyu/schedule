@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 
+
 # Create your views here.
 
 
@@ -131,17 +132,18 @@ def break_time(request):
 
 
 @login_required
-def timesheets(request):
-    user = request.user
-    first_name = request.user.first_name.capitalize()
-    last_name = request.user.last_name.capitalize()
-    clock_ins = User_worktime.objects.filter(user=user).order_by(
+def timesheets(request, employee_id, start_date, end_date):
+    employee = User.objects.get(id=employee_id)
+    first_name = employee.first_name.capitalize()
+    last_name = employee.last_name.capitalize()
+
+    worktimes = User_worktime.objects.filter(
+        user=employee, date__gte=start_date, date__lte=end_date).order_by('-clock_in')
+    clock_ins = worktimes.filter(user=employee).order_by(
         '-clock_in').values_list('clock_in', flat=True)
-    clock_outs = User_worktime.objects.filter(user=user).order_by(
+    clock_outs = worktimes.filter(user=employee).order_by(
         '-clock_out').values_list('clock_out', flat=True)
-    worktimes = User_worktime.objects.filter(user=user).order_by('-clock_in')
     work_hours = []
-    print(work_hours)
     total_work_time = timedelta()
     for worktime in worktimes:
         if worktime.clock_out:
@@ -183,9 +185,7 @@ def show_employee(request, employee_id):
 
 
 @login_required
-def pick_date_range(request):
+def pick_date_range(request, employee_id):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-
-    print(start_date, end_date)
-    return render(request, 'account/timesheets.html')
+    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')

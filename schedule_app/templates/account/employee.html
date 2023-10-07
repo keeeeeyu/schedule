@@ -4,6 +4,16 @@
 <h1>Employee Detail Page</h1>
 {{employee.first_name}}
 {{employee.last_name}}
-{{employee.email}}    
+{{employee.email}}
+    
+
+<form action="{% url 'pick_date_range' employee.id %}" method='POST'>
+    {% csrf_token %}
+    <label>Start Date:</label>
+    <input type="date" name="start_date"/>
+    <label>End Date:</label>
+    <input type="date" name="end_date"/>
+    <input type="submit" class="" value="Set Date Range">
+</form>
 {% endblock content %}
     
