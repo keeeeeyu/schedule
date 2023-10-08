@@ -8,7 +8,7 @@ from django.utils import timezone
 from .models import User_worktime, User_breaktime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 # Create your views here.
@@ -73,7 +73,7 @@ def clock_in(request):
             user = request.user
             clock_in_time = timezone.localtime()
             clocked_in = User_worktime.objects.create(
-                user=user, clock_in=clock_in_time)
+                user=user, date=datetime.now(), clock_in=clock_in_time)
             clocked_in.save()
             messages.success(
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
@@ -81,7 +81,7 @@ def clock_in(request):
             user = request.user
             clock_in_time = timezone.localtime()
             clocked_in = User_worktime.objects.create(
-                user=user, clock_in=clock_in_time)
+                user=user, date=datetime.now(), clock_in=clock_in_time)
             clocked_in.save()
             messages.success(
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')

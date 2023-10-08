@@ -1,10 +1,10 @@
 <div class="navbar">
     <ul>
         <li><a href="{% url 'home' %}">Clock</a></li>
-        {% comment %} {% if user.is_staff is False %} {% endcomment %}
-        {% comment %} <li><a href="{% url 'timesheets' %}">Timesheets</a></li> {% endcomment %}
-        {% comment %} {% endif %} {% endcomment %}
         <li><a href="{% url 'break_time' %}">Break</a></li>
+        {% if user.is_staff is False %}
+        <li><a href="{% url 'show_employee' user.id %}">Account</a></li>
+        {% endif %}
         <li><a href="{% url 'logout' %}">Logout</a></li>
         
         {% if user.is_staff %}
