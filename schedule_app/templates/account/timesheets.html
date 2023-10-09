@@ -1,11 +1,14 @@
 {% extends 'home.html' %} 
-
+{% load static %}
 {% block content %}
-<form action="" method="get">
-    {{ form.as_p }}
-    <button type="submit">Filter</button>
-</form>
 <h2>Timesheets</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input type="text" id="daterange" name="daterange">
+    <button type="submit">Submit</button>
+</form>
 <div class = 'timesheet-container'>
     <ol class = 'timesheet-item'>
         <div class = 'timesheet-label'>Name</div>
@@ -34,4 +37,5 @@
         <li>{{ total_hours }}</li>        
     </ol>
 </div>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
