@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <div class="clock">
 <div>
     <h2>Location</h2>
@@ -14,6 +15,48 @@
         {% endfor %}
     {% endif %}
 </h2>
-</form>
+
 </div>                
 </div>
+
+<div class="schedule-chart">
+    <table>
+        <thead>
+            <tr>
+                <th></th> <!-- Empty corner cell -->
+                    <th>monday</th>
+                    <th>tuesday</th>
+                    <th>wednesday</th>
+                    <th>thursday</th>
+                    <th>friday</th>
+                    <th>saturday</th>
+                    <th>sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hour in 8|hours_range:21 %}
+            
+            {% if hour < 12 %}
+            <tr>
+                <td>{{ hour }}:00 am</td>
+            </tr>
+            <tr>
+                <td>{{ hour }}:30 am</td>
+            </tr>
+            {% elif hour >= 12 and hour < 21 %}
+            <tr>
+                <td>{{ hour }}:00 pm</td>
+            </tr>
+            <tr>
+                <td>{{ hour }}:30 pm</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ hour }}:00 pm</td>
+            </tr>                   
+            {% endif %}
+
+        {% endfor %}
+            
+        </tbody>
+</div> 
