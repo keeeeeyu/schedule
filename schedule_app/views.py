@@ -16,12 +16,14 @@ from datetime import timedelta, datetime
 
 @login_required
 def home(request):
+    first_name = request.user.first_name.capitalize()
     now = timezone.localtime()
     date_today = now.date()
     time_now = now.strftime("%I:%M %p")
     context = {
         'time_now': time_now,
-        'date_today': date_today
+        'date_today': date_today,
+        'first_name': first_name
     }
     print(request.user)
     return render(request, 'home.html', context)
