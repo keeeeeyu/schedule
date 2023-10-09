@@ -1,5 +1,5 @@
 {% extends 'home.html' %} 
-
+{% load static %}
 {% block content %}
 {% comment %} <form action="{% url 'pick_date_range' %}" method='POST'>
     {% csrf_token %}
@@ -39,4 +39,5 @@
         <li>{{ total_hours }}</li>        
     </ol>
 </div>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

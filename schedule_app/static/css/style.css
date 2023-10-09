@@ -56,6 +56,13 @@ h1 {
     overflow: hidden;
 }
 
+.navbar ul {
+    display: inline-flex;
+    list-style: none;
+}
+
+
+
 /* Style the links inside the navigation bar */
 .navbar a {
     float: left;
@@ -73,7 +80,7 @@ h1 {
 
 /* Change the color of links on hover */
 .navbar a:hover {
-    background-color: #ddd;
+    /* background-color: #ddd; */
     color: black;
 }
 
@@ -118,6 +125,40 @@ h1 {
     background-color: #ff5349;
     color: white;
     text-align: center;
+}
+
+.dropdown {
+    display: none;
+}
+
+.navbar ul li:hover .dropdown {
+    display: block;
+    position: absolute;
+    background-color: #ff5349;
+    margin-top: 32px;
+    width: 100px;
+    text-align: left;
+}
+
+.navbar ul li:hover .dropdown ul {
+    display: block;
+    margin: 10px;
+}
+
+.dropdown button {
+    border: none;
+    font-size: 15px;
+    background-color: #ff5349;
+    color: white;
+    text-align: left;
+    width: 100px;
+    margin-left: -50px;
+    text-align: center;
+}
+
+.dropdown button:hover {
+    color: #000;
+    cursor: pointer;
 }
 
 @media (max-width:768px) {
