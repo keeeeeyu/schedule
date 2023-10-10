@@ -80,7 +80,6 @@ h1 {
 
 /* Change the color of links on hover */
 .navbar a:hover {
-    /* background-color: #ddd; */
     color: black;
 }
 
