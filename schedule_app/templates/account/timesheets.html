@@ -1,6 +1,15 @@
 {% extends 'home.html' %} 
 
 {% block content %}
+{% comment %} <form action="{% url 'pick_date_range' %}" method='POST'>
+    {% csrf_token %}
+    <label>Start Date:</label>
+    <input type="date" name="start_date"/>
+    <label>End Date:</label>
+    <input type="date" name="end_date"/>
+    <input type="submit" class="" value="Set Date Range">
+</form> {% endcomment %}
+
 <h2>Timesheets</h2>
 <div class = 'timesheet-container'>
     <ol class = 'timesheet-item'>
