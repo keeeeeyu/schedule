@@ -67,6 +67,7 @@ def signup(request):
 
 @login_required
 def clock_in(request):
+    first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
         first_entry = User_worktime.objects.filter(user=request.user).first()
         last_entry = User_worktime.objects.filter(user=request.user).last()
@@ -89,11 +90,12 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'first_name':first_name})
 
 
 @login_required
 def clock_out(request):
+    first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
         last_entry = User_worktime.objects.filter(user=request.user).last()
         if last_entry.clock_out is None:
@@ -104,11 +106,12 @@ def clock_out(request):
                 request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked out.')
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'first_name': first_name})
 
 
 @login_required
 def break_time(request):
+    first_name = request.user.first_name.capitalize()
     last_entry = User_breaktime.objects.filter(user=request.user).last()
     time_now = timezone.localtime().strftime("%I:%M %p")
     if request.method == 'POST':
@@ -120,7 +123,7 @@ def break_time(request):
             break_out.save()
             messages.success(
                 request, f'Break out ({time_now}) successful.')
-            return render(request, 'home.html')
+            return render(request, 'home.html', {'first_name': first_name})
         elif last_entry.break_in == None:
             out = User_breaktime.objects.get(id=last_entry.id)
             break_in = timezone.localtime()
@@ -129,8 +132,8 @@ def break_time(request):
             print(messages)
             messages.success(
                 request, f'Break in ({time_now}) successful.')
-            return render(request, 'home.html')
-    return render(request, 'break.html')
+            return render(request, 'home.html', {'first_name': first_name})
+    return render(request, 'break.html', {'first_name': first_name})
 
 
 @login_required
