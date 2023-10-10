@@ -34,25 +34,25 @@
             </tr>
         </thead>
         <tbody>
-            {% for hour in 8|hours_range:21 %}
+            {% for hour in 8|hours_range:22 %}
             
             {% if hour < 12 %}
             <tr>
-                <td>{{ hour }}:00 am</td>
+                <td class="hour-cell">{{ hour }}:00 am</td>
             </tr>
             <tr>
-                <td>{{ hour }}:30 am</td>
+                <td class="half-hour-cell">{{ hour }}:30 am</td>
             </tr>
             {% elif hour >= 12 and hour < 21 %}
             <tr>
-                <td>{{ hour }}:00 pm</td>
+                <td class="hour-cell">{{ hour }}:00 pm</td>
             </tr>
             <tr>
-                <td>{{ hour }}:30 pm</td>
+                <td class="half-hour-cell">{{ hour }}:30 pm</td>
             </tr>
-            {% else %}
+            {% elif hour == 21 %}
             <tr>
-                <td>{{ hour }}:00 pm</td>
+                <td class="hour-cell">{{ hour }}:00 pm</td>
             </tr>                   
             {% endif %}
 
