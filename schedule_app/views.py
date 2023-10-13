@@ -156,7 +156,6 @@ def timesheets(request, employee_id, start_date, end_date):
         if worktime.clock_out:
             time_worked = worktime.clock_out - worktime.clock_in
             hours_worked = (time_worked.total_seconds() / 3600)
-            # print(hours_worked)
             work_hours.append(round(hours_worked, 1))
             total_work_time += time_worked
         else:
@@ -180,8 +179,7 @@ def timesheets(request, employee_id, start_date, end_date):
     for breaktime in breaktimes:
         if breaktime.break_in:
             break_period = breaktime.break_in - breaktime.break_out
-            hours_break = (time_worked.total_seconds() / 3600)
-            # print(hours_break)
+            hours_break = (break_period.total_seconds() / 3600)
             break_hours.append(round(hours_break, 1))
             total_break_time += break_period
         else:
@@ -190,6 +188,10 @@ def timesheets(request, employee_id, start_date, end_date):
 
     net_hours = total_work_hours - total_break_hours
 
+    regular_hours = []
+    for x, y in zip(work_hours, break_hours):
+        regular_hours.append(x-y)
+
     context = {
         'id': employee.id,
         'first_name': first_name,
@@ -197,14 +199,9 @@ def timesheets(request, employee_id, start_date, end_date):
         'clock_ins': clock_ins,
         'clock_outs': clock_outs,
         'total_work_hours': total_work_hours,
-        'worktimes': worktimes,
-        'work_hours': work_hours,
-        'break_ins': break_ins,
-        'break_outs': break_outs,
-        'breaktimes': breaktimes,
-        'break_hours': break_hours,
         'break_periods': break_periods,
-        'net_hours': net_hours
+        'net_hours': net_hours,
+        'regular_hours': regular_hours,
     }
 
     return render(request, 'account/timesheets.html', context)
