@@ -90,7 +90,7 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'home.html', {'first_name':first_name})
+    return render(request, 'home.html', {'first_name': first_name})
 
 
 @login_required
@@ -118,8 +118,9 @@ def break_time(request):
         if last_entry is None or last_entry.break_out and last_entry.break_in is not None:
             user = request.user
             out = timezone.localtime()
+            print(datetime.now(), "LOOOOOK")
             break_out = User_breaktime.objects.create(
-                user=user, break_out=out)
+                user=user, date=datetime.now(), break_out=out)
             break_out.save()
             messages.success(
                 request, f'Break out ({time_now}) successful.')
@@ -148,33 +149,68 @@ def timesheets(request, employee_id, start_date, end_date):
         '-clock_in').values_list('clock_in', flat=True)
     clock_outs = worktimes.filter(user=employee).order_by(
         '-clock_out').values_list('clock_out', flat=True)
+
     work_hours = []
     total_work_time = timedelta()
     for worktime in worktimes:
         if worktime.clock_out:
             time_worked = worktime.clock_out - worktime.clock_in
             hours_worked = (time_worked.total_seconds() / 3600)
-            print(hours_worked)
+            # print(hours_worked)
             work_hours.append(round(hours_worked, 1))
             total_work_time += time_worked
         else:
             work_hours.append('N/A')
-    total_hours = round(total_work_time.total_seconds() / 3600, 1)
+    total_work_hours = round(total_work_time.total_seconds() / 3600, 1)
+
+    breaktimes = User_breaktime.objects.filter(
+        user=employee, date__gte=start_date, date__lte=end_date).order_by('-break_out')
+    break_outs = breaktimes.filter(user=employee).order_by(
+        '-break_out').values_list('break_out', flat=True)
+    break_ins = breaktimes.filter(user=employee).order_by(
+        '-break_in').values_list('break_in', flat=True)
+
+    break_periods = []
+    for x, y in zip(break_outs, break_ins):
+        break_periods.append(
+            f'{x.strftime("%I:%M")} - {y.strftime("%I:%M")}')
+
+    break_hours = []
+    total_break_time = timedelta()
+    for breaktime in breaktimes:
+        if breaktime.break_in:
+            break_period = breaktime.break_in - breaktime.break_out
+            hours_break = (time_worked.total_seconds() / 3600)
+            # print(hours_break)
+            break_hours.append(round(hours_break, 1))
+            total_break_time += break_period
+        else:
+            break_hours.append('N/A')
+    total_break_hours = round(total_break_time.total_seconds() / 3600, 1)
+
+    net_hours = total_work_hours - total_break_hours
 
     context = {
+        'id': employee.id,
         'first_name': first_name,
         'last_name': last_name,
         'clock_ins': clock_ins,
         'clock_outs': clock_outs,
-        'total_hours': total_hours,
+        'total_work_hours': total_work_hours,
         'worktimes': worktimes,
-        'work_hours': work_hours
+        'work_hours': work_hours,
+        'break_ins': break_ins,
+        'break_outs': break_outs,
+        'breaktimes': breaktimes,
+        'break_hours': break_hours,
+        'break_periods': break_periods,
+        'net_hours': net_hours
     }
 
     return render(request, 'account/timesheets.html', context)
 
 
-@login_required
+@ login_required
 def all_employees(request):
     users = User.objects.all().values()
     context = {
@@ -183,13 +219,13 @@ def all_employees(request):
     return render(request, 'all_employees.html', context)
 
 
-@login_required
+@ login_required
 def show_employee(request, employee_id):
     employee = User.objects.get(id=employee_id)
     return render(request, 'account/employee.html', {'employee': employee})
 
 
-@login_required
+@ login_required
 def pick_date_range(request, employee_id):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')

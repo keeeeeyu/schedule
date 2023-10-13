@@ -1,31 +1,40 @@
 {% extends 'home.html' %} 
 {% load static %}
 {% block content %}
-{% comment %} <form action="{% url 'pick_date_range' %}" method='POST'>
+<form action="{% url 'pick_date_range' id %}" method='POST'>
     {% csrf_token %}
     <label>Start Date:</label>
     <input type="date" name="start_date"/>
     <label>End Date:</label>
     <input type="date" name="end_date"/>
     <input type="submit" class="" value="Set Date Range">
-</form> {% endcomment %}
+</form>
 
-<h2>Timesheets</h2>
+<h2>Time Card Detail</h2>
+<h3>{{ first_name }} {{ last_name }}</h3>
 <div class = 'timesheet-container'>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Name</div>
-        <div>{{ first_name }} {{ last_name }}</div>
+        <div class = 'timesheet-label'>Date</div>
+        {% for clock_in in clock_ins %}
+            <li>{{ clock_in.date }}</li>
+        {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
         <div class = 'timesheet-label'>Clock In</div>
         {% for clock_in in clock_ins %}
-            <li>{{ clock_in }}</li>
+            <li>{{ clock_in.time }}</li>
+        {% endfor %}
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Break Period</div>
+        {% for break_period in break_periods %}
+            <li>{{ break_period }}</li>
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
         <div class = 'timesheet-label'>Clock Out</div>
         {% for clock_out in clock_outs  %}
-            <li>{{ clock_out }}</li>
+            <li>{{ clock_out.time }}</li>
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
@@ -35,8 +44,8 @@
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Total Hours</div>
-        <li>{{ total_hours }}</li>        
+        <div class = 'timesheet-label'>Net Hours</div>
+        <li>{{ net_hours }}</li>        
     </ol>
 </div>
 <script src="{% static 'js/script.js' %}"></script>
