@@ -19,11 +19,27 @@ def home(request):
     first_name = request.user.first_name.capitalize()
     now = timezone.localtime()
     date_today = now.date()
-    seven = date_today + timedelta(days=7)
-    print(seven)
+    time_now = now.strftime("%I:%M %p")
     start_of_week = date_today - timedelta(days=date_today.weekday())
     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
-    time_now = now.strftime("%I:%M %p")
+    day_count = request.session.get('day_count', 0)
+    print(day_count)
+    
+    # if 'day_count' not in request.session:
+    #     request.session['day_count'] = 0
+ 
+    if request.method == "POST":
+        if 'next_week' in request.POST:
+            request.session['day_count'] = day_count + 7
+            day_count = request.session['day_count']
+            next_week = date_today + timedelta(days=day_count)
+            start_of_week = next_week - timedelta(days=next_week.weekday())
+            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        elif 'current_week' in request.POST:
+            request.session['day_count'] = 0
+    else:
+        request.session['day_count'] = 0
+        
     context = {
         'time_now': time_now,
         'date_today': date_today,

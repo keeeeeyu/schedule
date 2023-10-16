@@ -20,7 +20,8 @@
 </div>
 <form action="" method="post">
 {% csrf_token %}
-<button type="submit">Next Week</button>
+<button type="submit" name="current_week">Current Week</button>
+<button type="submit" name="next_week">Next Week</button>
 <div class="schedule-chart">
     <table>
         <thead>
