@@ -23,11 +23,7 @@ def home(request):
     start_of_week = date_today - timedelta(days=date_today.weekday())
     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
     day_count = request.session.get('day_count', 0)
-    print(day_count)
     
-    # if 'day_count' not in request.session:
-    #     request.session['day_count'] = 0
- 
     if request.method == "POST":
         if 'next_week' in request.POST:
             request.session['day_count'] = day_count + 7
