@@ -18,19 +18,18 @@
 
 </div>                
 </div>
-
+<form action="" method="post">
+{% csrf_token %}
+<button type="submit">Next Week</button>
 <div class="schedule-chart">
     <table>
         <thead>
             <tr>
                 <th></th> <!-- Empty corner cell -->
-                    <th>monday</th>
-                    <th>tuesday</th>
-                    <th>wednesday</th>
-                    <th>thursday</th>
-                    <th>friday</th>
-                    <th>saturday</th>
-                    <th>sunday</th>
+                {% for date in week_dates %}
+                    <td>{{ date|date:"l, F j" }}</td>
+                {% endfor %}
+
             </tr>
         </thead>
         <tbody>
@@ -59,4 +58,5 @@
         {% endfor %}
             
         </tbody>
-</div> 
+</div>
+</form>

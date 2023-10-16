@@ -22,3 +22,7 @@ class User_breaktime(models.Model):
 
     def __str__(self):
         return f'{self.break_out}'
+
+class User_Schedule(models.Model):
+    date = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime, User_breaktime
+from .models import User_worktime, User_breaktime, User_Schedule
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
@@ -19,13 +19,17 @@ def home(request):
     first_name = request.user.first_name.capitalize()
     now = timezone.localtime()
     date_today = now.date()
+    seven = date_today + timedelta(days=7)
+    print(seven)
+    start_of_week = date_today - timedelta(days=date_today.weekday())
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
     time_now = now.strftime("%I:%M %p")
     context = {
         'time_now': time_now,
         'date_today': date_today,
-        'first_name': first_name
+        'first_name': first_name,
+        'week_dates': week_dates,
     }
-    print(request.user)
     return render(request, 'home.html', context)
 
 
@@ -194,3 +198,4 @@ def pick_date_range(request, employee_id):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')
+
