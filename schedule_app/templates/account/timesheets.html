@@ -1,43 +1,62 @@
 {% extends 'home.html' %} 
 {% load static %}
 {% block content %}
-{% comment %} <form action="{% url 'pick_date_range' %}" method='POST'>
+<div class="time_card_detail">
+    <h1>Time Card Detail</h1>
+    <h3>{{ first_name }} {{ last_name }}</h3>
+<form action="{% url 'pick_date_range' id %}" method='POST'>
     {% csrf_token %}
     <label>Start Date:</label>
     <input type="date" name="start_date"/>
     <label>End Date:</label>
     <input type="date" name="end_date"/>
     <input type="submit" class="" value="Set Date Range">
-</form> {% endcomment %}
+</form>
 
-<h2>Timesheets</h2>
 <div class = 'timesheet-container'>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Name</div>
-        <div>{{ first_name }} {{ last_name }}</div>
-    </ol>
-    <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Clock In</div>
+        <div class = 'timesheet-label'>Date</div>
         {% for clock_in in clock_ins %}
-            <li>{{ clock_in }}</li>
+            <li>{{ clock_in.date }}</li>
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Clock Out</div>
+        <div class = 'timesheet-label'>In</div>
+        {% for clock_in in clock_ins %}
+            <li>{{ clock_in.time }}</li>
+        {% endfor %}
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Break</div>
+        {% for break_period in break_periods %}
+            <li>{{ break_period }}</li>
+        {% endfor %}
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Out</div>
         {% for clock_out in clock_outs  %}
-            <li>{{ clock_out }}</li>
+            <li>{{ clock_out.time }}</li>
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
-            <div class = 'timesheet-label'>Hours</div>
-            {% for work_hour in work_hours %}
-                <li>{{ work_hour }}</li>
+            <div class = 'timesheet-label'>Regular</div>
+            {% for regular_hour in regular_hours %}
+                <li>{{ regular_hour }}</li>
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
-        <div class = 'timesheet-label'>Total Hours</div>
-        <li>{{ total_hours }}</li>        
+        <div class = 'timesheet-label'>OT</div>
+            <li>0</li>
+    </ol>
+    <ol class = 'timesheet-item'>
+    <div class = 'timesheet-label'>Double OT</div>
+    <li>0</li>
+    </ol>
+    <ol class = 'timesheet-item'>
+        <div class = 'timesheet-label'>Net Hours</div>
+        <li>{{ net_hours }}</li>        
     </ol>
 </div>
 <script src="{% static 'js/script.js' %}"></script>
+</div>
 {% endblock %}

@@ -26,7 +26,6 @@
             </ul>
             
         </li>
-        <li><a href="{% url 'break_time' %}">Break</a></li>
         
         {% if user.is_staff is False %}
         <li><a href="{% url 'show_employee' user.id %}">Account</a></li>

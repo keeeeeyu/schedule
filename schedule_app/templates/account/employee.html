@@ -1,6 +1,7 @@
 {% extends 'home.html' %} 
 
 {% block content %}
+<div class="employee_detail">
 <h1>Employee Detail Page</h1>
 {{employee.first_name}}
 {{employee.last_name}}
@@ -15,6 +16,6 @@
     <input type="date" name="end_date"/>
     <input type="submit" class="" value="Set Date Range">
 </form>
-    
+<div>
 {% endblock content %}
     
