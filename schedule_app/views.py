@@ -35,6 +35,12 @@ def home(request):
             next_week = date_today + timedelta(days=day_count)
             start_of_week = next_week - timedelta(days=next_week.weekday())
             week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        elif 'past_week' in request.POST:
+            request.session['day_count'] = day_count - 7
+            day_count = request.session['day_count']
+            next_week = date_today + timedelta(days=day_count)
+            start_of_week = next_week - timedelta(days=next_week.weekday())
+            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
         elif 'current_week' in request.POST:
             request.session['day_count'] = 0
     else:
@@ -210,7 +216,10 @@ def timesheets(request, employee_id, start_date, end_date):
 
     regular_hours = []
     for x, y in zip(work_hours, break_hours):
-        regular_hours.append(x-y)
+        if 'N/A' in work_hours:
+            messages.error(request, 'You are still clocked in')
+        else:
+            regular_hours.append(x-y)
 
     context = {
         'id': employee.id,
