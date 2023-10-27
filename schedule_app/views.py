@@ -13,6 +13,10 @@ from datetime import timedelta, datetime
 
 # Create your views here.
 
+def calculate_week_dates(date_today, day_count):
+    start_of_week = date_today - timedelta(days=date_today.weekday())
+    week_dates = [start_of_week + timedelta(days=day_count + i) for i in range(7)]
+    return week_dates
 
 @login_required
 def home(request):
@@ -27,6 +31,12 @@ def home(request):
     if request.method == "POST":
         if 'next_week' in request.POST:
             request.session['day_count'] = day_count + 7
+            day_count = request.session['day_count']
+            next_week = date_today + timedelta(days=day_count)
+            start_of_week = next_week - timedelta(days=next_week.weekday())
+            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        elif 'past_week' in request.POST:
+            request.session['day_count'] = day_count - 7
             day_count = request.session['day_count']
             next_week = date_today + timedelta(days=day_count)
             start_of_week = next_week - timedelta(days=next_week.weekday())
@@ -206,7 +216,10 @@ def timesheets(request, employee_id, start_date, end_date):
 
     regular_hours = []
     for x, y in zip(work_hours, break_hours):
-        regular_hours.append(x-y)
+        if 'N/A' in work_hours:
+            messages.error(request, 'You are still clocked in')
+        else:
+            regular_hours.append(x-y)
 
     context = {
         'id': employee.id,
@@ -225,22 +238,30 @@ def timesheets(request, employee_id, start_date, end_date):
 
 @ login_required
 def all_employees(request):
+    first_name = request.user.first_name.capitalize() 
     users = User.objects.all().values()
     context = {
-        'employees': users
+        'employees': users,
+        'first_name': first_name,
     }
     return render(request, 'all_employees.html', context)
 
 
 @ login_required
 def show_employee(request, employee_id):
+    first_name = request.user.first_name.capitalize()
     employee = User.objects.get(id=employee_id)
-    return render(request, 'account/employee.html', {'employee': employee})
+    context = {
+        'employee': employee,
+        'first_name': first_name,
+    }
+    return render(request, 'account/employee.html', context)
 
 
 @ login_required
 def pick_date_range(request, employee_id):
+    first_name = request.user.first_name.capitalize()
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')
+    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}', {'first_name': first_name})
 

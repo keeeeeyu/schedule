@@ -35,7 +35,13 @@
     <ol class = 'timesheet-item'>
         <div class = 'timesheet-label'>Out</div>
         {% for clock_out in clock_outs  %}
-            <li>{{ clock_out.time }}</li>
+            
+            {% if clock_out %}
+                <li>{{ clock_out.time }}</li>
+            {% else %}
+                <li>N/A</li>
+            {% endif %}
+            
         {% endfor %}
     </ol>
     <ol class = 'timesheet-item'>
