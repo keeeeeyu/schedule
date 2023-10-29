@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime, User_breaktime, User_Schedule
+from .models import User_worktime, User_breaktime, User_schedule
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
@@ -13,10 +13,6 @@ from datetime import timedelta, datetime
 
 # Create your views here.
 
-def calculate_week_dates(date_today, day_count):
-    start_of_week = date_today - timedelta(days=date_today.weekday())
-    week_dates = [start_of_week + timedelta(days=day_count + i) for i in range(7)]
-    return week_dates
 
 @login_required
 def home(request):
@@ -24,34 +20,12 @@ def home(request):
     now = timezone.localtime()
     date_today = now.date()
     time_now = now.strftime("%I:%M %p")
-    start_of_week = date_today - timedelta(days=date_today.weekday())
-    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
-    day_count = request.session.get('day_count', 0)
-    
-    if request.method == "POST":
-        if 'next_week' in request.POST:
-            request.session['day_count'] = day_count + 7
-            day_count = request.session['day_count']
-            next_week = date_today + timedelta(days=day_count)
-            start_of_week = next_week - timedelta(days=next_week.weekday())
-            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
-        elif 'past_week' in request.POST:
-            request.session['day_count'] = day_count - 7
-            day_count = request.session['day_count']
-            next_week = date_today + timedelta(days=day_count)
-            start_of_week = next_week - timedelta(days=next_week.weekday())
-            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
-        elif 'current_week' in request.POST:
-            request.session['day_count'] = 0
-    else:
-        request.session['day_count'] = 0
-        
     context = {
         'time_now': time_now,
         'date_today': date_today,
-        'first_name': first_name,
-        'week_dates': week_dates,
+        'first_name': first_name
     }
+    print(request.user)
     return render(request, 'home.html', context)
 
 
@@ -216,10 +190,7 @@ def timesheets(request, employee_id, start_date, end_date):
 
     regular_hours = []
     for x, y in zip(work_hours, break_hours):
-        if 'N/A' in work_hours:
-            messages.error(request, 'You are still clocked in')
-        else:
-            regular_hours.append(x-y)
+        regular_hours.append(x-y)
 
     context = {
         'id': employee.id,
@@ -238,30 +209,21 @@ def timesheets(request, employee_id, start_date, end_date):
 
 @ login_required
 def all_employees(request):
-    first_name = request.user.first_name.capitalize() 
     users = User.objects.all().values()
     context = {
-        'employees': users,
-        'first_name': first_name,
+        'employees': users
     }
     return render(request, 'all_employees.html', context)
 
 
 @ login_required
 def show_employee(request, employee_id):
-    first_name = request.user.first_name.capitalize()
     employee = User.objects.get(id=employee_id)
-    context = {
-        'employee': employee,
-        'first_name': first_name,
-    }
-    return render(request, 'account/employee.html', context)
+    return render(request, 'account/employee.html', {'employee': employee})
 
 
 @ login_required
 def pick_date_range(request, employee_id):
-    first_name = request.user.first_name.capitalize()
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}', {'first_name': first_name})
-
+    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')
