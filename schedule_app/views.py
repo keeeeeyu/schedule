@@ -93,7 +93,24 @@ def signup(request):
 
 @login_required
 def clock(request):
-    return render(request, 'clock.html')
+    first_name = request.user.first_name.capitalize()
+    user_worktime = User_worktime.objects.filter(user=request.user).last()
+
+    clock_in_verification = user_worktime.clock_out is not None
+
+    print(clock_in_verification)
+    print('in',user_worktime.clock_in)
+    print('out',user_worktime.clock_out)
+
+    # no clock in and out (Y)
+    # clocked in and no clock out (Y)
+    # if there is clock in and out from last entry (Y)
+
+    context = {
+        'first_name': first_name,
+        'clock_in_verification': clock_in_verification
+    }
+    return render(request, 'clock.html', context)
 
 @login_required
 def clock_in(request):
