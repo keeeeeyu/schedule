@@ -6,6 +6,7 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logout'),
     path('signup/', views.signup, name='signup'),
     path('home/', views.home, name='home'),
+    path('clock/', views.clock, name='clock'),
     path('clock_in/', views.clock_in, name='clock_in'),
     path('clock_out/', views.clock_out, name='clock_out'),
     path('timesheets/<int:employee_id>/<str:start_date>/<str:end_date>',

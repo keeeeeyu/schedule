@@ -92,6 +92,10 @@ def signup(request):
 
 
 @login_required
+def clock(request):
+    return render(request, 'clock.html')
+
+@login_required
 def clock_in(request):
     first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
