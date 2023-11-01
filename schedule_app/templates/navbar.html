@@ -7,23 +7,11 @@
             <div class="dropdown">
             <ul>
                 <li>
-                    <form action="{% url 'clock_in' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Clock In</button>
-                    </form>
+                    <button>Profile</button>
                 </li>
                 <li>
-                    <form action="{% url 'clock_out' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Clock Out</button>
-                    </form>
+                    <button>Update Profile</button>
                 </li>
-                <li>
-                    <form action="{% url 'break_time' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Break</button>
-                    </form>
-                </li> 
             </ul>
             
         </li>

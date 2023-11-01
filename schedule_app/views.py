@@ -120,7 +120,7 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'home.html', {'first_name': first_name})
+    return render(request, 'clock.html', {'first_name': first_name})
 
 
 @login_required
@@ -136,7 +136,7 @@ def clock_out(request):
                 request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked out.')
-    return render(request, 'home.html', {'first_name': first_name})
+    return render(request, 'clock.html', {'first_name': first_name})
 
 
 @login_required
@@ -154,7 +154,7 @@ def break_time(request):
             break_out.save()
             messages.success(
                 request, f'Break out ({time_now}) successful.')
-            return render(request, 'home.html', {'first_name': first_name})
+            return render(request, 'clock.html', {'first_name': first_name})
         elif last_entry.break_in == None:
             out = User_breaktime.objects.get(id=last_entry.id)
             break_in = timezone.localtime()
@@ -163,7 +163,7 @@ def break_time(request):
             print(messages)
             messages.success(
                 request, f'Break in ({time_now}) successful.')
-            return render(request, 'home.html', {'first_name': first_name})
+            return render(request, 'clock.html', {'first_name': first_name})
     return render(request, 'break.html', {'first_name': first_name})
 
 
