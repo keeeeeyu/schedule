@@ -9,6 +9,7 @@ from .models import User_worktime, User_breaktime, User_Schedule
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -95,20 +96,28 @@ def signup(request):
 def clock(request):
     first_name = request.user.first_name.capitalize()
     user_worktime = User_worktime.objects.filter(user=request.user).last()
-
     clock_in_verification = user_worktime.clock_out is not None
+    print(user_worktime.clock_in.date())
+    now = timezone.localtime()
+    date_today = now.date()
+    clock_in_time = user_worktime.clock_in
+    clock_out_time = user_worktime.clock_out
+    if date_today == clock_in_time.date():
+        if user_worktime.clock_out is None:
+            time_worked = now - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+        else:
+            time_worked = clock_out_time - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+    else:
+        hours_worked = 'N/A'
 
-    print(clock_in_verification)
-    print('in',user_worktime.clock_in)
-    print('out',user_worktime.clock_out)
-
-    # no clock in and out (Y)
-    # clocked in and no clock out (Y)
-    # if there is clock in and out from last entry (Y)
-
+    if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        return JsonResponse({'html_content': render(request, 'partial_clock_content.html', context).content})
     context = {
         'first_name': first_name,
-        'clock_in_verification': clock_in_verification
+        'clock_in_verification': clock_in_verification,
+        'hours_worked': hours_worked,
     }
     return render(request, 'clock.html', context)
 
