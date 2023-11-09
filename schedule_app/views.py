@@ -5,14 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime, User_breaktime, User_schedule
+from .models import User_worktime, User_breaktime, User_schedule, DEPARTMENTS
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
 
 
 # Create your views here.
-
 
 @login_required
 def home(request):
@@ -227,3 +226,29 @@ def pick_date_range(request, employee_id):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')
+
+
+@login_required
+def create_shift(request):
+    all_employees = User.objects.all().values()
+    departments = DEPARTMENTS
+    context = {
+        'all_employees': all_employees,
+        'departments': departments
+    }
+
+    return render(request, 'schedule/create.html', context)
+
+
+def add_shift(request):
+    print("ITS HITTING THIS CONTROLLER")
+    shift = User_schedule.objects.create(
+        date=request.POST.get('date'),
+        user_id=request.POST.get('user'),
+        start_time=request.POST.get('start_time'),
+        end_time=request.POST.get('end_time'),
+        department=request.POST.get('department')
+    )
+    print(shift)
+    shift.save()
+    return redirect('/home/')

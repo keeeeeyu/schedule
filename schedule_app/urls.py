@@ -15,5 +15,7 @@ urlpatterns = [
     path('employees/<int:employee_id>',
          views.show_employee, name='show_employee'),
     path('employees/<int:employee_id>/',
-         views.pick_date_range, name='pick_date_range')
+         views.pick_date_range, name='pick_date_range'),
+    path('schedule/', views.create_shift, name='create_shift'),
+    path('schedule/add_shift', views.add_shift, name='add_shift'),
 ]
