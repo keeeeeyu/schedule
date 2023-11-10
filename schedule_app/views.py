@@ -112,13 +112,13 @@ def clock(request):
     else:
         hours_worked = 'N/A'
 
-    if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return JsonResponse({'html_content': render(request, 'partial_clock_content.html', context).content})
     context = {
         'first_name': first_name,
         'clock_in_verification': clock_in_verification,
         'hours_worked': hours_worked,
+        'date_today': date_today,
     }
+    
     return render(request, 'clock.html', context)
 
 @login_required
@@ -295,3 +295,23 @@ def pick_date_range(request, employee_id):
     end_date = request.POST.get('end_date')
     return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}', {'first_name': first_name})
 
+@ login_required
+def profile(request):
+    first_name = request.user.first_name.capitalize() 
+    user = request.user
+    
+    user_values = {
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'staff_status': user.is_superuser,
+        'date_joined': user.date_joined
+    }
+    print('check', user_values)
+    context = {
+        'first_name': first_name,
+        'user_values': user_values
+    }
+
+    return render(request, 'account/profile.html', context)

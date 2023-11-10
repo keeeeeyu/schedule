@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+
+
+{% block content %}
+    
+    <h2>profile page</h2>
+    <tr>
+        
+        {% for key, value in user_values.items %}
+            <div>{{ key }}</div>
+            <div>{{ value }}</div><br>
+
+        {% endfor %}
+            
+    </tr>
+{% endblock content %}
+    
