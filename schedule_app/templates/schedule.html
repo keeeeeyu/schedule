@@ -1,0 +1,25 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<button onclick="openAddShiftModal()">Add Shift</button>
+{% include 'schedule/add_shift.html' %}
+
+<script>
+    function openAddShiftModal() {
+        console.log("HIT")
+        document.getElementById('addShiftModal').style.display = 'block';
+    }
+
+    function closeAddShiftModal() {
+        document.getElementById('addShiftModal').style.display = 'none';
+    }
+
+    window.onClick = function(event) {
+        if (event.target == document.getElementById('addShiftModal')) {
+            closeAddShiftModal();
+        }
+    }
+</script>
+    
+{% endblock content %}
+    

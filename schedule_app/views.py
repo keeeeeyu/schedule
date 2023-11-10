@@ -237,7 +237,7 @@ def create_shift(request):
         'departments': departments
     }
 
-    return render(request, 'schedule/create.html', context)
+    return render(request, 'schedule.html', context)
 
 
 def add_shift(request):
