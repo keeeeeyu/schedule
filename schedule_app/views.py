@@ -308,10 +308,16 @@ def profile(request):
         'staff_status': user.is_superuser,
         'date_joined': user.date_joined
     }
-    print('check', user_values)
+    
     context = {
         'first_name': first_name,
         'user_values': user_values
     }
 
     return render(request, 'account/profile.html', context)
+
+@ login_required
+def update_profile(request, user_id):
+    profile = User.objects.get(id=user_id)
+    print(profile)
+    return redirect('profile.html')

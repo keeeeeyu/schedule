@@ -18,4 +18,6 @@ urlpatterns = [
      path('employees/<int:employee_id>/',
           views.pick_date_range, name='pick_date_range'),
      path('profile/', views.profile, name='profile'),
+     path('profile/<int:user_id>/update_profile', views.update_profile, name='update_profile'),
+     
 ]
