@@ -316,13 +316,16 @@ def profile(request):
 
     return render(request, 'account/profile.html', context)
 
-@ login_required
-def update_profile(request, user_id):
-    profile = User.objects.get(id=user_id)
-    print(profile)
-    try:
-        profile = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        # Handle the case where the user with the specified user_id does not exist
-        return render(request, 'user_not_found.html')
-    return redirect('update_profile', user_id=user_id)
+def edit_profile(request, employee_id):
+    user_profile = User.objects.get(id=employee_id)
+    return render(request, 'account/update_profile.html', {'user_profile': user_profile})
+# @ login_required
+# def update_profile(request, user_id):
+#     profile = User.objects.get(id=user_id)
+#     print(profile)
+#     try:
+#         profile = User.objects.get(id=user_id)
+#     except User.DoesNotExist:
+#         # Handle the case where the user with the specified user_id does not exist
+#         return render(request, 'user_not_found.html')
+#     return redirect('update_profile', user_id=user_id)
