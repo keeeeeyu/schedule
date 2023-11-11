@@ -320,4 +320,9 @@ def profile(request):
 def update_profile(request, user_id):
     profile = User.objects.get(id=user_id)
     print(profile)
-    return redirect('profile.html')
+    try:
+        profile = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        # Handle the case where the user with the specified user_id does not exist
+        return render(request, 'user_not_found.html')
+    return redirect('update_profile', user_id=user_id)
