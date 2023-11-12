@@ -318,22 +318,22 @@ def edit_profile(request):
     first_name = request.user.first_name.capitalize() 
     return render(request, 'account/edit_profile.html', {'first_name': first_name})
 
-# @ login_required
-# def update_profile(request, employee_id):
-#     profile = User.objects.get(id=employee_id)
-#     user_info = {
-#         'username': request.POST.get('username'),
-#         'first_name': request.POST.get('first_name'),
-#         'last_name': request.POST.get('last_name'),
-#         'email': request.POST.get('email'),
-#         'password': request.POST.get('password')
-#     }
-#     if any(value is None or value.stript() == '' for value in user_info.values()):
-#         value = existing_value_value
+@ login_required
+def update_profile(request, employee_id):
+    profile = User.objects.get(id=employee_id)
+    user_info = {
+        'username': request.POST.get('username'),
+        'first_name': request.POST.get('first_name'),
+        'last_name': request.POST.get('last_name'),
+        'email': request.POST.get('email'),
+        'password': request.POST.get('password')
+    }
+    if any(value is None or value.stript() == '' for value in user_info.values()):
+        value = existing_value_value
 
-#     try:
-#         profile = User.objects.get(id=employee_id)
-#     except User.DoesNotExist:
-#         # Handle the case where the user with the specified user_id does not exist
-#         return render(request, 'user_not_found.html')
-#     return redirect('profile')
+    try:
+        profile = User.objects.get(id=employee_id)
+    except User.DoesNotExist:
+        # Handle the case where the user with the specified user_id does not exist
+        return render(request, 'user_not_found.html')
+    return redirect('profile')
