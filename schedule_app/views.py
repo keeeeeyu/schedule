@@ -123,7 +123,6 @@ def clock(request):
 
 @login_required
 def clock_in(request):
-    first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
         first_entry = User_worktime.objects.filter(user=request.user).first()
         last_entry = User_worktime.objects.filter(user=request.user).last()
@@ -146,12 +145,11 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'clock.html', {'first_name': first_name})
+    return redirect('clock')
 
 
 @login_required
 def clock_out(request):
-    first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
         last_entry = User_worktime.objects.filter(user=request.user).last()
         if last_entry.clock_out is None:
@@ -162,7 +160,7 @@ def clock_out(request):
                 request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked out.')
-    return render(request, 'clock.html', {'first_name': first_name})
+    return redirect('clock')
 
 
 @login_required
@@ -180,7 +178,7 @@ def break_time(request):
             break_out.save()
             messages.success(
                 request, f'Break out ({time_now}) successful.')
-            return render(request, 'clock.html', {'first_name': first_name})
+            return redirect('clock')
         elif last_entry.break_in == None:
             out = User_breaktime.objects.get(id=last_entry.id)
             break_in = timezone.localtime()
@@ -189,7 +187,7 @@ def break_time(request):
             print(messages)
             messages.success(
                 request, f'Break in ({time_now}) successful.')
-            return render(request, 'clock.html', {'first_name': first_name})
+            return redirect('clock')
     return render(request, 'break.html', {'first_name': first_name})
 
 
@@ -320,22 +318,22 @@ def edit_profile(request):
     first_name = request.user.first_name.capitalize() 
     return render(request, 'account/edit_profile.html', {'first_name': first_name})
 
-@ login_required
-def update_profile(request, employee_id):
-    profile = User.objects.get(id=employee_id)
-    user_info = {
-        'username': request.POST.get('username'),
-        'first_name': request.POST.get('first_name'),
-        'last_name': request.POST.get('last_name'),
-        'email': request.POST.get('email'),
-        'password': request.POST.get('password')
-    }
-    if any(value is None or value.stript() == '' for value in user_info.values()):
-        value = existing_value_value
+# @ login_required
+# def update_profile(request, employee_id):
+#     profile = User.objects.get(id=employee_id)
+#     user_info = {
+#         'username': request.POST.get('username'),
+#         'first_name': request.POST.get('first_name'),
+#         'last_name': request.POST.get('last_name'),
+#         'email': request.POST.get('email'),
+#         'password': request.POST.get('password')
+#     }
+#     if any(value is None or value.stript() == '' for value in user_info.values()):
+#         value = existing_value_value
 
-    try:
-        profile = User.objects.get(id=employee_id)
-    except User.DoesNotExist:
-        # Handle the case where the user with the specified user_id does not exist
-        return render(request, 'user_not_found.html')
-    return redirect('profile')
+#     try:
+#         profile = User.objects.get(id=employee_id)
+#     except User.DoesNotExist:
+#         # Handle the case where the user with the specified user_id does not exist
+#         return render(request, 'user_not_found.html')
+#     return redirect('profile')
