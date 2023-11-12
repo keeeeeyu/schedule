@@ -318,22 +318,34 @@ def edit_profile(request):
     first_name = request.user.first_name.capitalize() 
     return render(request, 'account/edit_profile.html', {'first_name': first_name})
 
+def is_username_taken(username):
+    return User.objects.filter(username=username).exists()
+
 @ login_required
 def update_profile(request, employee_id):
-    profile = User.objects.get(id=employee_id)
-    user_info = {
-        'username': request.POST.get('username'),
-        'first_name': request.POST.get('first_name'),
-        'last_name': request.POST.get('last_name'),
-        'email': request.POST.get('email'),
-        'password': request.POST.get('password')
-    }
-    if any(value is None or value.stript() == '' for value in user_info.values()):
-        value = existing_value_value
-
     try:
-        profile = User.objects.get(id=employee_id)
+        user_profile = User.objects.get(id=employee_id)
     except User.DoesNotExist:
         # Handle the case where the user with the specified user_id does not exist
         return render(request, 'user_not_found.html')
+    
+    user_profile = User.objects.get(id=employee_id)
+    username = request.POST.get('username', user_profile.username)
+    first_name = request.POST.get('first_name', user_profile.first_name)
+    last_name = request.POST.get('last_name', user_profile.last_name)
+    email = request.POST.get('email', user_profile.email)
+    password = request.POST.get('password', user_profile.password)
+
+    if username != user_profile.username and is_username_taken(username):
+        messages.error(request, 'Username is already taken. Please choose a different username.')
+        return render(request, 'account/edit_profile.html',  {'error_message': 'Username is already taken. Please choose a different username.'})
+    
+    user_profile.username = username
+    user_profile.first_name = first_name
+    user_profile.last_name = last_name
+    user_profile.email = email
+    user_profile.password = password
+    
+    user_profile.save()
+    
     return redirect('profile')
