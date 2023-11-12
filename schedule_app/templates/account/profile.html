@@ -4,14 +4,32 @@
 {% block content %}
     
     <h2>profile page</h2>
-    <tr>
-        
-        {% for key, value in user_values.items %}
-            <div>{{ key }}</div>
-            <div>{{ value }}</div><br>
-
-        {% endfor %}
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Address</th>
+            <th>Staff Status</th>
+            <th>Date Joined</th>
+        </tr>
+        <tr>
             
-    </tr>
+            {% for key, value in user_values.items %}
+                <th>
+                    {% if key == 'staff_status' %}
+                        {% if value %}
+                            Manager
+                        {% else %}
+                            Employee
+                        {% endif %}
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                </th>
+            {% endfor %}
+   
+        </tr>
+    </table>
 {% endblock content %}
     
