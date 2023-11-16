@@ -9,9 +9,16 @@ from .models import User_worktime, User_breaktime, User_schedule, DEPARTMENTS
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
+from django.http import JsonResponse
 
 
 # Create your views here.
+def calculate_week_dates(date_today, day_count):
+    start_of_week = date_today - timedelta(days=date_today.weekday())
+    week_dates = [start_of_week +
+                  timedelta(days=day_count + i) for i in range(7)]
+    return week_dates
+
 
 @login_required
 def home(request):
@@ -19,12 +26,34 @@ def home(request):
     now = timezone.localtime()
     date_today = now.date()
     time_now = now.strftime("%I:%M %p")
+    start_of_week = date_today - timedelta(days=date_today.weekday())
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+    day_count = request.session.get('day_count', 0)
+
+    if request.method == "POST":
+        if 'next_week' in request.POST:
+            request.session['day_count'] = day_count + 7
+            day_count = request.session['day_count']
+            next_week = date_today + timedelta(days=day_count)
+            start_of_week = next_week - timedelta(days=next_week.weekday())
+            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        elif 'past_week' in request.POST:
+            request.session['day_count'] = day_count - 7
+            day_count = request.session['day_count']
+            next_week = date_today + timedelta(days=day_count)
+            start_of_week = next_week - timedelta(days=next_week.weekday())
+            week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+        elif 'current_week' in request.POST:
+            request.session['day_count'] = 0
+    else:
+        request.session['day_count'] = 0
+
     context = {
         'time_now': time_now,
         'date_today': date_today,
-        'first_name': first_name
+        'first_name': first_name,
+        'week_dates': week_dates,
     }
-    print(request.user)
     return render(request, 'home.html', context)
 
 
@@ -65,8 +94,37 @@ def signup(request):
 
 
 @login_required
-def clock_in(request):
+def clock(request):
     first_name = request.user.first_name.capitalize()
+    user_worktime = User_worktime.objects.filter(user=request.user).last()
+    clock_in_verification = user_worktime.clock_out is not None
+    print(user_worktime.clock_in.date())
+    now = timezone.localtime()
+    date_today = now.date()
+    clock_in_time = user_worktime.clock_in
+    clock_out_time = user_worktime.clock_out
+    if date_today == clock_in_time.date():
+        if user_worktime.clock_out is None:
+            time_worked = now - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+        else:
+            time_worked = clock_out_time - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+    else:
+        hours_worked = 'N/A'
+
+    context = {
+        'first_name': first_name,
+        'clock_in_verification': clock_in_verification,
+        'hours_worked': hours_worked,
+        'date_today': date_today,
+    }
+
+    return render(request, 'clock.html', context)
+
+
+@login_required
+def clock_in(request):
     if request.method == 'POST':
         first_entry = User_worktime.objects.filter(user=request.user).first()
         last_entry = User_worktime.objects.filter(user=request.user).last()
@@ -89,12 +147,11 @@ def clock_in(request):
                 request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked in.')
-    return render(request, 'home.html', {'first_name': first_name})
+    return redirect('clock')
 
 
 @login_required
 def clock_out(request):
-    first_name = request.user.first_name.capitalize()
     if request.method == 'POST':
         last_entry = User_worktime.objects.filter(user=request.user).last()
         if last_entry.clock_out is None:
@@ -105,7 +162,7 @@ def clock_out(request):
                 request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
         else:
             messages.error(request, 'You are already clocked out.')
-    return render(request, 'home.html', {'first_name': first_name})
+    return redirect('clock')
 
 
 @login_required
@@ -123,7 +180,7 @@ def break_time(request):
             break_out.save()
             messages.success(
                 request, f'Break out ({time_now}) successful.')
-            return render(request, 'home.html', {'first_name': first_name})
+            return redirect('clock')
         elif last_entry.break_in == None:
             out = User_breaktime.objects.get(id=last_entry.id)
             break_in = timezone.localtime()
@@ -132,7 +189,7 @@ def break_time(request):
             print(messages)
             messages.success(
                 request, f'Break in ({time_now}) successful.')
-            return render(request, 'home.html', {'first_name': first_name})
+            return redirect('clock')
     return render(request, 'break.html', {'first_name': first_name})
 
 
@@ -240,8 +297,8 @@ def create_shift(request):
     return render(request, 'schedule.html', context)
 
 
+@ login_required
 def add_shift(request):
-    print("ITS HITTING THIS CONTROLLER")
     shift = User_schedule.objects.create(
         date=request.POST.get('date'),
         user_id=request.POST.get('user'),
@@ -252,3 +309,65 @@ def add_shift(request):
     print(shift)
     shift.save()
     return redirect('/home/')
+
+
+@ login_required
+def profile(request):
+    first_name = request.user.first_name.capitalize()
+    user = request.user
+
+    user_values = {
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'staff_status': user.is_superuser,
+        'date_joined': user.date_joined
+    }
+
+    context = {
+        'first_name': first_name,
+        'user_values': user_values
+    }
+
+    return render(request, 'account/profile.html', context)
+
+
+def edit_profile(request):
+    first_name = request.user.first_name.capitalize()
+    return render(request, 'account/edit_profile.html', {'first_name': first_name})
+
+
+def is_username_taken(username):
+    return User.objects.filter(username=username).exists()
+
+
+@ login_required
+def update_profile(request, employee_id):
+    try:
+        user_profile = User.objects.get(id=employee_id)
+    except User.DoesNotExist:
+        # Handle the case where the user with the specified user_id does not exist
+        return render(request, 'user_not_found.html')
+
+    user_profile = User.objects.get(id=employee_id)
+    username = request.POST.get('username', user_profile.username)
+    first_name = request.POST.get('first_name', user_profile.first_name)
+    last_name = request.POST.get('last_name', user_profile.last_name)
+    email = request.POST.get('email', user_profile.email)
+    password = request.POST.get('password', user_profile.password)
+
+    if username != user_profile.username and is_username_taken(username):
+        messages.error(
+            request, 'Username is already taken. Please choose a different username.')
+        return render(request, 'account/edit_profile.html',  {'error_message': 'Username is already taken. Please choose a different username.'})
+
+    user_profile.username = username
+    user_profile.first_name = first_name
+    user_profile.last_name = last_name
+    user_profile.email = email
+    user_profile.password = password
+
+    user_profile.save()
+
+    return redirect('profile')

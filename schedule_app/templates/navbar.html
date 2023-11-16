@@ -1,28 +1,15 @@
 <div class="navbar">
     <ul>
-        <li><a href="{% url 'home' %}">Clock</a></li>
+        <li><a href="{% url 'home' %}">Schedule</a></li>
+        <li><a href="{% url 'clock' %}">Clock</a></li>
         <li>
             <a href="">{{ first_name }} ▾</a>
             <div class="dropdown">
             <ul>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
                 <li>
-                    <form action="{% url 'clock_in' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Clock In</button>
-                    </form>
+                    <a href="{% url 'edit_profile' %}">Update</a>
                 </li>
-                <li>
-                    <form action="{% url 'clock_out' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Clock Out</button>
-                    </form>
-                </li>
-                <li>
-                    <form action="{% url 'break_time' %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit">Break</button>
-                    </form>
-                </li> 
             </ul>
             
         </li>

@@ -1,0 +1,23 @@
+{% extends 'home.html' %}
+
+
+{% block content %}
+    <h2>update page</h2>
+    <h3>{{ error_message }}</h3>
+    <form action="{% url 'update_profile' user.id %}" method="POST">
+        {% csrf_token %}
+        <div>Username:</div>
+        <input type="text" name="username" value="{{ user.username }}">
+        <div>First Name</div>
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+        <div>Last Name</div>
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+        <div>Email</div>
+        <input type="email" name="email" value="{{ user.email }}">
+        <div>Password</div>
+        <input type="password" name="password" value="{{ user.password }}">
+        
+        <button type="submit">Update</button>
+    </form>
+{% endblock content %}
+    
