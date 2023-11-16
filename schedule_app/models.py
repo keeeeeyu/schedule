@@ -5,6 +5,7 @@ from django.urls import reverse
 # Create your models here.
 
 DEPARTMENTS = (
+    ('U', 'Unassigned'),
     ('P', 'Pharmacist'),
     ('R', 'Retail'),
     ('O', 'Office'),
