@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
@@ -355,7 +355,9 @@ def update_profile(request, employee_id):
     first_name = request.POST.get('first_name', user_profile.first_name)
     last_name = request.POST.get('last_name', user_profile.last_name)
     email = request.POST.get('email', user_profile.email)
-    password = request.POST.get('password', user_profile.password)
+    current_password = request.POST.get('current_password', user_profile.password)
+    new_password = request.POST.get('new_password')
+    confirm_password = request.POST.get('confirm_password')
 
     if username != user_profile.username and is_username_taken(username):
         messages.error(
@@ -368,6 +370,17 @@ def update_profile(request, employee_id):
     user_profile.email = email
     user_profile.password = password
 
+    if current_password and new_password and confirm_password:
+        if user_profile.check_password(current_password):
+            if new_password == confirm_password:
+                user_profile.set_password(new_password)
+                update_session_auth_hash(request, user_profile)
+            else:
+                messages.error(request, 'New password and confirm password must match.')
+                return render(request, 'account/edit_profile.html', {'error_message': 'New password and confirm password must match.'})
+        else:
+            messages.error(request, 'Current password is incorrect.')
+            return render(request, 'account/edit_profile.html', {'error_message': 'Current password is incorrect.'})
+        
     user_profile.save()
-
     return redirect('profile')

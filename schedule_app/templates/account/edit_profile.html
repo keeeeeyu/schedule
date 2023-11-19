@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <h2>update page</h2>
+    <h2>Update Profile</h2>
     <h3>{{ error_message }}</h3>
     <form action="{% url 'update_profile' user.id %}" method="POST">
         {% csrf_token %}
@@ -14,8 +14,13 @@
         <input type="text" name="last_name" value="{{ user.last_name }}">
         <div>Email</div>
         <input type="email" name="email" value="{{ user.email }}">
-        <div>Password</div>
-        <input type="password" name="password" value="{{ user.password }}">
+        <h2>Change Password</h2>
+        <div>Current Password</div>
+        <input type="password" name="current_password" placeholder="Password" autocomplete="new-password">
+        <div>New Password</div>
+        <input type="password" name="new_password" placeholder="Password" autocomplete="new-password">
+        <div>Confirm New Password</div>
+        <input type="password" name="confirm_password" placeholder="Password" autocomplete="new-password"><br>
         
         <button type="submit">Update</button>
     </form>
