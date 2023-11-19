@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
-from .models import User_worktime, User_breaktime, User_Schedule
+from .models import User_worktime, User_breaktime, User_schedule, DEPARTMENTS
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
@@ -13,11 +13,12 @@ from django.http import JsonResponse
 
 
 # Create your views here.
-
 def calculate_week_dates(date_today, day_count):
     start_of_week = date_today - timedelta(days=date_today.weekday())
-    week_dates = [start_of_week + timedelta(days=day_count + i) for i in range(7)]
+    week_dates = [start_of_week +
+                  timedelta(days=day_count + i) for i in range(7)]
     return week_dates
+
 
 @login_required
 def home(request):
@@ -28,7 +29,7 @@ def home(request):
     start_of_week = date_today - timedelta(days=date_today.weekday())
     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
     day_count = request.session.get('day_count', 0)
-    
+
     if request.method == "POST":
         if 'next_week' in request.POST:
             request.session['day_count'] = day_count + 7
@@ -46,7 +47,7 @@ def home(request):
             request.session['day_count'] = 0
     else:
         request.session['day_count'] = 0
-        
+
     context = {
         'time_now': time_now,
         'date_today': date_today,
@@ -118,8 +119,9 @@ def clock(request):
         'hours_worked': hours_worked,
         'date_today': date_today,
     }
-    
+
     return render(request, 'clock.html', context)
+
 
 @login_required
 def clock_in(request):
@@ -244,10 +246,7 @@ def timesheets(request, employee_id, start_date, end_date):
 
     regular_hours = []
     for x, y in zip(work_hours, break_hours):
-        if 'N/A' in work_hours:
-            messages.error(request, 'You are still clocked in')
-        else:
-            regular_hours.append(x-y)
+        regular_hours.append(x-y)
 
     context = {
         'id': employee.id,
@@ -266,38 +265,57 @@ def timesheets(request, employee_id, start_date, end_date):
 
 @ login_required
 def all_employees(request):
-    first_name = request.user.first_name.capitalize() 
     users = User.objects.all().values()
     context = {
-        'employees': users,
-        'first_name': first_name,
+        'employees': users
     }
     return render(request, 'all_employees.html', context)
 
 
 @ login_required
 def show_employee(request, employee_id):
-    first_name = request.user.first_name.capitalize()
     employee = User.objects.get(id=employee_id)
-    context = {
-        'employee': employee,
-        'first_name': first_name,
-    }
-    return render(request, 'account/employee.html', context)
+    return render(request, 'account/employee.html', {'employee': employee})
 
 
 @ login_required
 def pick_date_range(request, employee_id):
-    first_name = request.user.first_name.capitalize()
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}', {'first_name': first_name})
+    return redirect(f'/timesheets/{employee_id}/{start_date}/{end_date}')
+
+
+@login_required
+def create_shift(request):
+    all_employees = User.objects.all().values()
+    departments = DEPARTMENTS
+    context = {
+        'all_employees': all_employees,
+        'departments': departments
+    }
+
+    return render(request, 'schedule.html', context)
+
+
+@ login_required
+def add_shift(request):
+    shift = User_schedule.objects.create(
+        date=request.POST.get('date'),
+        user_id=request.POST.get('user'),
+        start_time=request.POST.get('start_time'),
+        end_time=request.POST.get('end_time'),
+        department=request.POST.get('department')
+    )
+    print(shift)
+    shift.save()
+    return redirect('/home/')
+
 
 @ login_required
 def profile(request):
-    first_name = request.user.first_name.capitalize() 
+    first_name = request.user.first_name.capitalize()
     user = request.user
-    
+
     user_values = {
         'username': user.username,
         'first_name': user.first_name,
@@ -306,7 +324,7 @@ def profile(request):
         'staff_status': user.is_superuser,
         'date_joined': user.date_joined
     }
-    
+
     context = {
         'first_name': first_name,
         'user_values': user_values
@@ -314,12 +332,15 @@ def profile(request):
 
     return render(request, 'account/profile.html', context)
 
+
 def edit_profile(request):
-    first_name = request.user.first_name.capitalize() 
+    first_name = request.user.first_name.capitalize()
     return render(request, 'account/edit_profile.html', {'first_name': first_name})
+
 
 def is_username_taken(username):
     return User.objects.filter(username=username).exists()
+
 
 @ login_required
 def update_profile(request, employee_id):
@@ -328,7 +349,7 @@ def update_profile(request, employee_id):
     except User.DoesNotExist:
         # Handle the case where the user with the specified user_id does not exist
         return render(request, 'user_not_found.html')
-    
+
     user_profile = User.objects.get(id=employee_id)
     username = request.POST.get('username', user_profile.username)
     first_name = request.POST.get('first_name', user_profile.first_name)
@@ -339,14 +360,16 @@ def update_profile(request, employee_id):
     confirm_password = request.POST.get('confirm_password')
 
     if username != user_profile.username and is_username_taken(username):
-        messages.error(request, 'Username is already taken. Please choose a different username.')
+        messages.error(
+            request, 'Username is already taken. Please choose a different username.')
         return render(request, 'account/edit_profile.html',  {'error_message': 'Username is already taken. Please choose a different username.'})
-    
+
     user_profile.username = username
     user_profile.first_name = first_name
     user_profile.last_name = last_name
     user_profile.email = email
-    
+    user_profile.password = password
+
     if current_password and new_password and confirm_password:
         if user_profile.check_password(current_password):
             if new_password == confirm_password:

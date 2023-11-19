@@ -1,4 +1,25 @@
+{% comment %} {% extends 'home.html' %} {% endcomment %}
+
+{% block content %}
+
+<script>
+    function openAddShiftModal() {
+        document.getElementById('addShiftModal').style.display = 'block';
+    }
+
+    function closeAddShiftModal() {
+        document.getElementById('addShiftModal').style.display = 'none';
+    }
+
+    window.onClick = function(event) {
+        if (event.target == document.getElementById('addShiftModal')) {
+            closeAddShiftModal();
+        }
+    }
+</script>
+    
 {% load custom_filters %}
+
 <div class="clock">
 <div>
     <h2>Location</h2>
@@ -15,6 +36,10 @@
         {% endfor %}
     {% endif %}
 </h2>
+
+<button onclick="openAddShiftModal()">Add Shift</button>
+{% include 'schedule/add_shift.html' %}
+{% include 'schedule/weekly_schedule.html' %}
 
 </div>                
 </div>
@@ -62,3 +87,4 @@
         </tbody>
 </div>
 </form>
+{% endblock content %}
