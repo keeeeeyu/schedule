@@ -21,6 +21,5 @@ urlpatterns = [
     path('account/edit_profile', views.edit_profile, name='edit_profile'),
     path('account/profile/<int:employee_id>/update_profile',
          views.update_profile, name='update_profile'),
-    path('schedule/', views.create_shift, name='create_shift'),
     path('schedule/add_shift', views.add_shift, name='add_shift'),
 ]
