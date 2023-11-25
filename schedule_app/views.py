@@ -97,20 +97,28 @@ def signup(request):
 def clock(request):
     first_name = request.user.first_name.capitalize()
     user_worktime = User_worktime.objects.filter(user=request.user).last()
-    clock_in_verification = user_worktime.clock_out is not None
-    print(user_worktime.clock_in.date())
-    now = timezone.localtime()
-    date_today = now.date()
-    clock_in_time = user_worktime.clock_in
-    clock_out_time = user_worktime.clock_out
-    if date_today == clock_in_time.date():
-        if user_worktime.clock_out is None:
-            time_worked = now - clock_in_time
-            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+
+    if user_worktime is not None:
+        clock_in_verification = user_worktime.clock_out is not None
+        print(clock_in_verification)
+        now = timezone.localtime()
+        date_today = now.date()
+        clock_in_time = user_worktime.clock_in
+        clock_out_time = user_worktime.clock_out
+
+        if date_today == clock_in_time.date():
+            if user_worktime.clock_out is None:
+                time_worked = now - clock_in_time
+                hours_worked = round(time_worked.total_seconds() / 3600, 2)
+            else:
+                time_worked = clock_out_time - clock_in_time
+                hours_worked = round(time_worked.total_seconds() / 3600, 2)
         else:
-            time_worked = clock_out_time - clock_in_time
-            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+            hours_worked = 'N/A'
     else:
+        # Handle the case when user_worktime is None
+        clock_in_verification = True
+        date_today = None
         hours_worked = 'N/A'
 
     context = {
