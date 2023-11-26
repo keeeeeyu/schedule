@@ -289,24 +289,60 @@ td {
     margin-bottom: 10px;
     border-radius: 5px;
     border-width: 1px;
-    
+    background-color: white;
+    border: 2px solid #ff5349;
 }
 
-/* 
-.styled-button {
-    display: block;
+.edit-fieldset {
     border: none;
-    margin: 0 auto;
-    padding: 10px 20px;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    border-width: 1px;
-    transition: background-color 0.5s;
-    background-color: #ff5349;
+    font-size: 20px;
+}
+
+.edit-hr {
+    margin: 10px 0 40px; /* Add margin at the top and bottom of the hr element */
+}
+
+.edit-label {
+    display: block;
+    margin: 10px 0 10px;
+    font-size: 13px;
+}
+
+.edit-input {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+    opacity: 0.7;
+}
+
+#edit-a {
+    display: inline-block;
+    padding: 8px 18px;
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    border: 2px solid #ff5349;
+    border-radius: 5px;
     font-size: 15px;
 }
 
-.styled-button:hover {
-    transform: scale(1.03);
-} */
+#edit-button {
+    display: inline-block;
+    font-size: 15px;
+    margin: 0 auto;
+    padding: 10px 25px;
+    margin-top: 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #ff5349;
+    color: white;
+    border: none;
+}
+
+#edit-buttons-container {
+    margin-left: 10px;
+}

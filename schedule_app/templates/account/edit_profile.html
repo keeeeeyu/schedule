@@ -2,29 +2,40 @@
 
 
 {% block content %}
-    <h2>Update Profile</h2>
+    
     <h3>{{ error_message }}</h3>
     <form action="{% url 'update_profile' user.id %}" method="POST">
         {% csrf_token %}
-        <div>Username:</div>
-        <input type="text" name="username" value="{{ user.username }}">
-        <div>First Name</div>
-        <input type="text" name="first_name" value="{{ user.first_name }}">
-        <div>Last Name</div>
-        <input type="text" name="last_name" value="{{ user.last_name }}">
-        <div>Email</div>
-        <input type="email" name="email" value="{{ user.email }}">
-        <h2>Change Password</h2>
-        <div>Current Password</div>
-        <input type="password" name="current_password" placeholder="Password" autocomplete="new-password">
-        <div>New Password</div>
-        <input type="password" name="new_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
-        title="Password must match"  autocomplete="new-password">
-        <div>Confirm New Password</div>
-        <input type="password" name="confirm_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
-        title="Password must match" autocomplete="new-password"><br>
-        
-        <button type="submit">Update</button>
+        <fieldset class="edit-fieldset">
+            <legend class="edit-legend">Update Profile</legend>
+            <hr class="edit-hr">
+            <label class="edit-label">USERNAME</label>
+            <input class="edit-input" type="text" name="username" value="{{ user.username }}">
+            <label class="edit-label">FIRST NAME</label>
+            <input class="edit-input" type="text" name="first_name" value="{{ user.first_name }}">
+            <label class="edit-label">LAST NAME</label>
+            <input class="edit-input" type="text" name="last_name" value="{{ user.last_name }}">
+            <label class="edit-label">EMAIL</label>
+            <input class="edit-input" type="email" name="email" value="{{ user.email }}">
+        </fieldset>
+
+        <fieldset class="edit-fieldset">
+            <legend class="edit-legend">Change Password</legend>
+            <hr class="edit-hr">
+            <label class="edit-label">CURRENT PASSWORD</label>
+            <input class="edit-input" type="password" name="current_password" placeholder="Password" autocomplete="new-password">
+            <label class="edit-label">NEW PASSWORD</label>
+            <input class="edit-input" type="password" name="new_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+            title="Password must match"  autocomplete="new-password">
+            <label class="edit-label">CONFIRM NEW PASSWORD</label>
+            <input class="edit-input" type="password" name="confirm_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+            title="Password must match" autocomplete="new-password"><br>
+        </fieldset>
+
+        <div id="edit-buttons-container">
+            <a id="edit-a" href="{% url 'profile' %}">Cancel</a>
+            <button id="edit-button" type="submit">Save</button>
+        </div>
     </form>
 {% endblock content %}
     
