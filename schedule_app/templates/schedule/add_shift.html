@@ -1,6 +1,5 @@
-<div class="modal" id="addShiftModal">
-    <div class="modal_content">
-        <span class="close" onclick="closeAddShiftModal()">&times;</span>
+<div class="modal" id="addShiftWindow">
+<div class="modal_content">
 <form action="{% url 'add_shift' %}" enctype="multipart/form-data" method="POST">
     {% csrf_token %}
     <label>Date:</label>
@@ -32,6 +31,6 @@
     <br>
     <input type="submit" class="" value="Add Shift">
 </form>
-<button onclick="closeAddShiftModal()">Close</button>
+<button onclick="self.close()">Close</button>
 </div>
 </div>

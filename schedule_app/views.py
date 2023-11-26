@@ -48,6 +48,9 @@ def home(request):
     else:
         request.session['day_count'] = 0
 
+    shifts = getAllShifts()
+    print(shifts)
+
     context = {
         'time_now': time_now,
         'date_today': date_today,
@@ -55,6 +58,11 @@ def home(request):
         'week_dates': week_dates,
     }
     return render(request, 'home.html', context)
+
+
+def getAllShifts():
+    shifts = User_schedule.objects.all()
+    return shifts
 
 
 def loginPage(request):
@@ -293,8 +301,7 @@ def create_shift(request):
         'all_employees': all_employees,
         'departments': departments
     }
-
-    return render(request, 'schedule.html', context)
+    return render(request, 'schedule/add_shift.html', context)
 
 
 @ login_required
