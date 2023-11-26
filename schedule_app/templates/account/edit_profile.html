@@ -18,9 +18,11 @@
         <div>Current Password</div>
         <input type="password" name="current_password" placeholder="Password" autocomplete="new-password">
         <div>New Password</div>
-        <input type="password" name="new_password" placeholder="Password" autocomplete="new-password">
+        <input type="password" name="new_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+        title="Password must match"  autocomplete="new-password">
         <div>Confirm New Password</div>
-        <input type="password" name="confirm_password" placeholder="Password" autocomplete="new-password"><br>
+        <input type="password" name="confirm_password" placeholder="Password" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$"
+        title="Password must match" autocomplete="new-password"><br>
         
         <button type="submit">Update</button>
     </form>

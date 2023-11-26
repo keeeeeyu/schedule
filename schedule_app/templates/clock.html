@@ -2,31 +2,46 @@
 
 {% block content %}
 
-{% if clock_in_verification %}
+<div id="clock-body">
+
+    <div class="column1">
+
+        <h1>Welcome {{ first_name }}</h1>
+        <h1>{{ now }}</h1>
+    </div>
     
-    <form action="{% url 'clock_in' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">Clock In</button>
-    </form>
+    <div class="column2">
+        
+        {% if clock_in_verification %}
+    
+            <form action="{% url 'clock_in' %}" method="POST">
+                {% csrf_token %}
+                <button class="clock-button" type="submit">Clock In</button>
+            </form>
 
-{% else %}
+        {% else %}
 
-    <form action="{% url 'clock_out' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">Clock Out</button>
-    </form>
+            <form action="{% url 'clock_out' %}" method="POST">
+                {% csrf_token %}
+                <button class="clock-button" type="submit">Clock Out</button>
+            </form>
 
-{% endif %}
+        {% endif %}
 
-<form action="{% url 'break_time' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">Break</button>
-</form>
+        <form action="{% url 'break_time' %}" method="POST">
+            {% csrf_token %}
+            <button class="clock-button" type="submit">Break</button>
+        </form>
 
-<ol>
-    <li>{{ date_today }}</li>
-    <li>{{ hours_worked }}</li>
-</ol>
+        <hr>
+
+        <div>Hours worked: {{ hours_worked }} Hours</div>
+
+    </div>
+    
+
+    
+</div>
 
 {% endblock content %}
 

@@ -118,7 +118,7 @@ def clock(request):
     else:
         # Handle the case when user_worktime is None
         clock_in_verification = True
-        date_today = None
+        # date_today = None
         hours_worked = 'N/A'
 
     context = {
@@ -126,6 +126,7 @@ def clock(request):
         'clock_in_verification': clock_in_verification,
         'hours_worked': hours_worked,
         'date_today': date_today,
+        'now': now
     }
 
     return render(request, 'clock.html', context)
