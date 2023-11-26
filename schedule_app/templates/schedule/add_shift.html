@@ -1,3 +1,21 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Schedule</title>
+</head>
+<body>
 <div class="modal" id="addShiftWindow">
 <div class="modal_content">
 <form action="{% url 'add_shift' %}" enctype="multipart/form-data" method="POST">
@@ -34,3 +52,5 @@
 <button onclick="self.close()">Close</button>
 </div>
 </div>
+</body>
+</html>
