@@ -283,8 +283,9 @@ def all_employees(request):
 
 @ login_required
 def show_employee(request, employee_id):
+    first_name = request.user.first_name.capitalize() 
     employee = User.objects.get(id=employee_id)
-    return render(request, 'account/employee.html', {'employee': employee})
+    return render(request, 'account/employee.html', {'employee': employee, 'first_name': first_name})
 
 
 @ login_required
@@ -377,10 +378,12 @@ def update_profile(request, employee_id):
     user_profile.first_name = first_name
     user_profile.last_name = last_name
     user_profile.email = email
-    user_profile.password = password
 
     if current_password and new_password and confirm_password:
         if user_profile.check_password(current_password):
+            if new_password == current_password:
+                messages.error(request, 'Your new password must be different from your current password')
+                return render(request, 'account/edit_profile.html', {'error_message': 'Your new password must be different from your current password'})
             if new_password == confirm_password:
                 user_profile.set_password(new_password)
                 update_session_auth_hash(request, user_profile)
