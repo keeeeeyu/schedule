@@ -3,18 +3,19 @@
 {% block content %}
 
 <script>
-    function openAddShiftModal() {
-        document.getElementById('addShiftModal').style.display = 'block';
-    }
 
-    function closeAddShiftModal() {
-        document.getElementById('addShiftModal').style.display = 'none';
-    }
+    function openShiftWindow() {
+        // Specify the width and height for the new window
+        let width = 300;
+        let height = 300;
+        
+        // Calculate the center of the screen for window placement
+        let left = (window.innerWidth - width) / 2;
+        let top = (window.innerHeight - height) / 2;
 
-    window.onClick = function(event) {
-        if (event.target == document.getElementById('addShiftModal')) {
-            closeAddShiftModal();
-        }
+        let openedWindow = window.open("http://127.0.0.1:8000/schedule/create_shift/", "addShiftWindow", `width=${width},height=${height},left=${left},top=${top},resizable=yes`)
+        
+        openedWindow.focus();
     }
 </script>
     
@@ -37,8 +38,7 @@
     {% endif %}
 </h2>
 
-<button onclick="openAddShiftModal()">Add Shift</button>
-{% include 'schedule/add_shift.html' %}
+<button onclick="openShiftWindow()">Add Shift</button>
 {% include 'schedule/weekly_schedule.html' %}
 
 </div>                
@@ -52,7 +52,7 @@
     <table>
         <thead>
             <tr>
-                <th></th> <!-- Empty corner cell -->
+                {% comment %} <th></th> <!-- Empty corner cell --> {% endcomment %}
                 {% for date in week_dates %}
                     <td>{{ date|date:"l, F j" }}</td>
                 {% endfor %}
@@ -60,9 +60,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for hour in 8|hours_range:22 %}
+            {% comment %} {% for hour in 8|hours_range:22 %} {% endcomment %}
             
-            {% if hour < 12 %}
+            {% comment %} {% if hour < 12 %}
             <tr>
                 <td class="hour-cell">{{ hour }}:00 am</td>
             </tr>
@@ -82,7 +82,7 @@
             </tr>                   
             {% endif %}
 
-        {% endfor %}
+        {% endfor %} {% endcomment %}
             
         </tbody>
 </div>

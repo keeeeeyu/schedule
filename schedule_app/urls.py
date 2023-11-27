@@ -18,8 +18,10 @@ urlpatterns = [
     path('employees/<int:employee_id>/',
          views.pick_date_range, name='pick_date_range'),
     path('account/profile/', views.profile, name='profile'),
-    path('account/edit_profile', views.edit_profile, name='edit_profile'),
+    path('account/edit_profile/', views.edit_profile, name='edit_profile'),
     path('account/profile/<int:employee_id>/update_profile',
          views.update_profile, name='update_profile'),
-    path('schedule/add_shift', views.add_shift, name='add_shift'),
+    path('schedule/create_shift/', views.create_shift, name='create_shift'),
+    path('schedule/add_shift/', views.add_shift, name='add_shift'),
+    path('schedule/', views.getAllShifts, name='get_all_shifts'),
 ]

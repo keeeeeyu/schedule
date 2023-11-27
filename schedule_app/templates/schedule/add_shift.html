@@ -1,37 +1,52 @@
-<div class="modal" id="addShiftModal">
-    <div class="modal_content">
-        <span class="close" onclick="closeAddShiftModal()">&times;</span>
-<form action="{% url 'add_shift' %}" enctype="multipart/form-data" method="POST">
-    {% csrf_token %}
-    <label>Date:</label>
-    <input type="date" name="date"/>
-    <br>
-    <label>Employee:</label>
-    <select name="user">
-        
-        {% for employee in all_employees %}
-        <option value="{{employee.id}}">{{employee.first_name}} {{employee.last_name}}</option>
-        {% endfor %}
-            
-    </select>
-    <br>
-    <label>Start Time:</label>
-    <input type="text" name="start_time"/>
-    <br>
-    <label>End Time:</label>
-    <input type="text" name="end_time"/>
-    <br>
-    <label>Department:</label>
-    <select name="department">
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Lilita+One&display=swap"
+        />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        {% for department in departments %}
-            <option value="{{department.0}}">{{department.1}}</option>
-        {% endfor %}
-            
-    </select>
-    <br>
-    <input type="submit" class="" value="Add Shift">
-</form>
-<button onclick="closeAddShiftModal()">Close</button>
-</div>
-</div>
+        <title>Schedule</title>
+    </head>
+    <body>
+        <div class="modal" id="addShiftWindow">
+            <div class="modal_content">
+                <form action="{% url 'add_shift' %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <label id="addShiftLabel">Date:</label>
+                    <input type="date" name="date"/>
+                    <br>
+                    <label id="addShiftLabel">Employee:</label>
+                    <select name="user">
+                        {% for employee in all_employees %}
+                            <option value="{{employee.id}}">{{employee.first_name}} {{employee.last_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label id="addShiftLabel">Start Time:</label>
+                    <input type="text" name="start_time" />
+                    <br>
+                    <label id="addShiftLabel">End Time:</label>
+                    <input type="text" name="end_time" />
+                    <br>
+                    <label id="addShiftLabel">Department:</label>
+                    <select name="department">
+                        {% for department in departments %}
+                            <option value="{{department.0}}">{{department.1}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <input type="submit" class="" value="Add Shift">
+                </form>
+                <button onclick="self.close()">Close</button>
+            </div>
+        </div>
+    </body>
+</html>
