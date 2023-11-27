@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from django.utils import timezone
@@ -105,20 +105,28 @@ def signup(request):
 def clock(request):
     first_name = request.user.first_name.capitalize()
     user_worktime = User_worktime.objects.filter(user=request.user).last()
-    clock_in_verification = user_worktime.clock_out is not None
-    print(user_worktime.clock_in.date())
-    now = timezone.localtime()
-    date_today = now.date()
-    clock_in_time = user_worktime.clock_in
-    clock_out_time = user_worktime.clock_out
-    if date_today == clock_in_time.date():
-        if user_worktime.clock_out is None:
-            time_worked = now - clock_in_time
-            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+
+    if user_worktime is not None:
+        clock_in_verification = user_worktime.clock_out is not None
+        print(clock_in_verification)
+        now = timezone.localtime()
+        date_today = now.date()
+        clock_in_time = user_worktime.clock_in
+        clock_out_time = user_worktime.clock_out
+
+        if date_today == clock_in_time.date():
+            if user_worktime.clock_out is None:
+                time_worked = now - clock_in_time
+                hours_worked = round(time_worked.total_seconds() / 3600, 2)
+            else:
+                time_worked = clock_out_time - clock_in_time
+                hours_worked = round(time_worked.total_seconds() / 3600, 2)
         else:
-            time_worked = clock_out_time - clock_in_time
-            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+            hours_worked = 'N/A'
     else:
+        # Handle the case when user_worktime is None
+        clock_in_verification = True
+        # date_today = None
         hours_worked = 'N/A'
 
     context = {
@@ -126,6 +134,7 @@ def clock(request):
         'clock_in_verification': clock_in_verification,
         'hours_worked': hours_worked,
         'date_today': date_today,
+        'now': now
     }
 
     return render(request, 'clock.html', context)
@@ -282,8 +291,9 @@ def all_employees(request):
 
 @ login_required
 def show_employee(request, employee_id):
+    first_name = request.user.first_name.capitalize() 
     employee = User.objects.get(id=employee_id)
-    return render(request, 'account/employee.html', {'employee': employee})
+    return render(request, 'account/employee.html', {'employee': employee, 'first_name': first_name})
 
 
 @ login_required
@@ -363,7 +373,9 @@ def update_profile(request, employee_id):
     first_name = request.POST.get('first_name', user_profile.first_name)
     last_name = request.POST.get('last_name', user_profile.last_name)
     email = request.POST.get('email', user_profile.email)
-    password = request.POST.get('password', user_profile.password)
+    current_password = request.POST.get('current_password', user_profile.password)
+    new_password = request.POST.get('new_password')
+    confirm_password = request.POST.get('confirm_password')
 
     if username != user_profile.username and is_username_taken(username):
         messages.error(
@@ -374,8 +386,21 @@ def update_profile(request, employee_id):
     user_profile.first_name = first_name
     user_profile.last_name = last_name
     user_profile.email = email
-    user_profile.password = password
 
+    if current_password and new_password and confirm_password:
+        if user_profile.check_password(current_password):
+            if new_password == current_password:
+                messages.error(request, 'Your new password must be different from your current password')
+                return render(request, 'account/edit_profile.html', {'error_message': 'Your new password must be different from your current password'})
+            if new_password == confirm_password:
+                user_profile.set_password(new_password)
+                update_session_auth_hash(request, user_profile)
+            else:
+                messages.error(request, 'New password and confirm password must match.')
+                return render(request, 'account/edit_profile.html', {'error_message': 'New password and confirm password must match.'})
+        else:
+            messages.error(request, 'Current password is incorrect.')
+            return render(request, 'account/edit_profile.html', {'error_message': 'Current password is incorrect.'})
+        
     user_profile.save()
-
     return redirect('profile')
