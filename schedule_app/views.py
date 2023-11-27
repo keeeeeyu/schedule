@@ -297,15 +297,17 @@ def pick_date_range(request, employee_id):
 def create_shift(request):
     all_employees = User.objects.all().values()
     departments = DEPARTMENTS
+
     context = {
         'all_employees': all_employees,
-        'departments': departments
+        'departments': departments,
     }
     return render(request, 'schedule/add_shift.html', context)
 
 
 @ login_required
 def add_shift(request):
+
     shift = User_schedule.objects.create(
         date=request.POST.get('date'),
         user_id=request.POST.get('user'),
@@ -313,9 +315,8 @@ def add_shift(request):
         end_time=request.POST.get('end_time'),
         department=request.POST.get('department')
     )
-    print(shift)
     shift.save()
-    return redirect('/home/')
+    return render(request, 'schedule/add_shift.html')
 
 
 @ login_required

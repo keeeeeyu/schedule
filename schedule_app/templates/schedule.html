@@ -3,18 +3,19 @@
 {% block content %}
 
 <script>
-    let openedWindow;
-
-    {% comment %} function openAddShiftModal() {
-        document.getElementById('addShiftModal').style.display = 'block';
-    }
-
-    function closeAddShiftModal() {
-        document.getElementById('addShiftModal').style.display = 'none';
-    } {% endcomment %}
 
     function openShiftWindow() {
-        openedWindow = window.open("http://127.0.0.1:8000/schedule/create_shift/", "addShiftTab", "popup")
+        // Specify the width and height for the new window
+        let width = 300;
+        let height = 300;
+        
+        // Calculate the center of the screen for window placement
+        let left = (window.innerWidth - width) / 2;
+        let top = (window.innerHeight - height) / 2;
+
+        let openedWindow = window.open("http://127.0.0.1:8000/schedule/create_shift/", "addShiftWindow", `width=${width},height=${height},left=${left},top=${top},resizable=yes`)
+        
+        openedWindow.focus();
     }
 </script>
     
