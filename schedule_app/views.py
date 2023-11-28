@@ -108,17 +108,22 @@ def clock(request):
     user_breaktime = User_breaktime.objects.filter(user=request.user).last()
     now = timezone.localtime()
     date_today = now.date()
-    
+    hours_worked = timedelta()
+    hours_break = timedelta()
+
     if user_breaktime is not None:
         break_in_time = user_breaktime.break_in
         break_out_time = user_breaktime.break_out
         if date_today == break_in_time.date():
             if break_out_time is None:
                 break_out_time = None
+
+            else:
+                break_time = break_out_time - break_in_time
+                hours_break = round(break_time.total_seconds() / 3600, 2)
     else:
         break_in_time = None
-        break_out_time = None
-    
+
     if user_worktime is not None:
         clock_in_verification = user_worktime.clock_out is not None
         clock_in_time = user_worktime.clock_in
@@ -133,14 +138,14 @@ def clock(request):
         elif user_worktime.clock_out is None:
             time_worked = now - clock_in_time
             hours_worked = round(time_worked.total_seconds() / 3600, 2)
-            
-
-
     else:
         clock_in_verification = True
-        hours_worked = 0
+        # hours_worked = 0
         clock_in_time = None
         clock_out_time = None
+
+    net_hours_worked = round((hours_worked - hours_break), 2)
+
     context = {
         'first_name': first_name,
         'clock_in_verification': clock_in_verification,
@@ -150,7 +155,8 @@ def clock(request):
         'clock_in_time': clock_in_time,
         'clock_out_time': clock_out_time,
         'break_in_time': break_in_time,
-        'break_out_time': break_out_time
+        'break_out_time': break_out_time,
+        'net_hours_worked': net_hours_worked,
     }
 
     return render(request, 'clock.html', context)
