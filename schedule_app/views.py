@@ -112,7 +112,7 @@ def clock(request):
     if user_breaktime is not None:
         break_in_time = user_breaktime.break_in
         break_out_time = user_breaktime.break_out
-        if date_today == break_out_time.date():
+        if date_today == break_in_time.date():
             if break_out_time is None:
                 break_out_time = None
     else:
@@ -208,20 +208,20 @@ def break_time(request):
             user = request.user
             out = timezone.localtime()
             print(datetime.now(), "LOOOOOK")
-            break_out = User_breaktime.objects.create(
-                user=user, date=datetime.now(), break_out=out)
-            break_out.save()
+            break_in = User_breaktime.objects.create(
+                user=user, date=datetime.now(), break_in=out)
+            break_in.save()
             messages.success(
-                request, f'Break out ({time_now}) successful.')
+                request, f'Break in ({time_now}) successful.')
             return redirect('clock')
-        elif last_entry.break_in == None:
+        elif last_entry.break_out == None:
             out = User_breaktime.objects.get(id=last_entry.id)
-            break_in = timezone.localtime()
-            out.break_in = break_in
+            break_out = timezone.localtime()
+            out.break_out = break_out
             out.save()
             print(messages)
             messages.success(
-                request, f'Break in ({time_now}) successful.')
+                request, f'Break out ({time_now}) successful.')
             return redirect('clock')
     return render(request, 'break.html', {'first_name': first_name})
 
