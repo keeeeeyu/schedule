@@ -105,19 +105,24 @@ def signup(request):
 def clock(request):
     first_name = request.user.first_name.capitalize()
     user_worktime = User_worktime.objects.filter(user=request.user).last()
-    user_breaktime_first = User_breaktime.objects.filter(user=request.user).first()
-    user_breaktime_last = User_breaktime.objects.filter(user=request.user).last()
-    # break_in = user_breaktime_last.break_in.strftime("%Y-%m-%d %H:%M:%S")
-    # break_out = user_breaktime_last.break_out.strftime("%Y-%m-%d %H:%M:%S") 
-    print(user_breaktime_last is not None)
+    user_breaktime = User_breaktime.objects.filter(user=request.user).last()
     now = timezone.localtime()
     date_today = now.date()
+    
+    if user_breaktime is not None:
+        break_in_time = user_breaktime.break_in
+        break_out_time = user_breaktime.break_out
+        if date_today == break_out_time.date():
+            if break_out_time is None:
+                break_out_time = None
+    else:
+        break_in_time = None
+        break_out_time = None
     
     if user_worktime is not None:
         clock_in_verification = user_worktime.clock_out is not None
         clock_in_time = user_worktime.clock_in
         clock_out_time = user_worktime.clock_out
-        
         if date_today == clock_in_time.date():
             if user_worktime.clock_out is None:
                 time_worked = now - clock_in_time
@@ -125,22 +130,27 @@ def clock(request):
             else:
                 time_worked = clock_out_time - clock_in_time
                 hours_worked = round(time_worked.total_seconds() / 3600, 2)
-        else:
-            hours_worked = 'N/A'
+        elif user_worktime.clock_out is None:
+            time_worked = now - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2)
+            
+
+
     else:
-        # Handle the case when user_worktime is None
         clock_in_verification = True
-        hours_worked = 'N/A'
-    
+        hours_worked = 0
+        clock_in_time = None
+        clock_out_time = None
     context = {
         'first_name': first_name,
         'clock_in_verification': clock_in_verification,
         'hours_worked': hours_worked,
         'date_today': date_today,
         'now': now,
-        # 'break_in': break_in,
-        # 'break_out': break_out,
-        'user_breaktime_first': user_breaktime_first,
+        'clock_in_time': clock_in_time,
+        'clock_out_time': clock_out_time,
+        'break_in_time': break_in_time,
+        'break_out_time': break_out_time
     }
 
     return render(request, 'clock.html', context)

@@ -41,13 +41,27 @@
         </h2>
         <hr>
 
-        <div>Hours worked: {{ hours_worked }} Hours</div>
-            
-
+        <fieldset>
+            <legend>{{ date_today }}</legend>
+            <table>
+                <tr>
+                <th>Clock In</th> 
+                <th>Clock Out</th>
+                <th>Break In</th>
+                <th>Break Out</th>
+                <th>Hours Worked</th>
+                </tr>
+                <tr>
+                    <th>{{ clock_in_time }}</th>
+                    <th>{{ clock_out_time }}</th>
+                    <th>{{ break_in_time }}</th>
+                    <th>{{ break_out_time }}</th>
+                    <th>{{ hours_worked }} Hours</th>
+                </tr>
+            </table>
+        </fieldset>
+        <hr>
     </div>
-    
-
-    
 </div>
 
 {% endblock content %}
