@@ -32,10 +32,17 @@
             {% csrf_token %}
             <button class="clock-button" type="submit">Break</button>
         </form>
-
+        <h2>
+            {% if messages %}
+                {% for message in messages %}
+                <div>{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </h2>
         <hr>
 
         <div>Hours worked: {{ hours_worked }} Hours</div>
+            
 
     </div>
     

@@ -30,13 +30,6 @@
     <p>{{ date_today }}</p>
 </div>
 <div>
-<h2>
-    {% if messages %}
-        {% for message in messages %}
-        <div>{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-</h2>
 
 <button onclick="openShiftWindow()">Add Shift</button>
 {% include 'schedule/weekly_schedule.html' %}
