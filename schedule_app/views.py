@@ -112,22 +112,30 @@ def clock(request):
     hours_break = timedelta()
 
     if user_breaktime is not None:
-        break_in_time = user_breaktime.break_in
-        break_out_time = user_breaktime.break_out
-        if date_today == break_in_time.date():
-            if break_out_time is None:
+        if date_today == user_breaktime.break_in.date():
+            break_in_time = user_breaktime.break_in
+            if user_breaktime.break_out is None:
                 break_out_time = None
-
+                hours_break = 0
             else:
+                break_out_time = user_breaktime.break_out
                 break_time = break_out_time - break_in_time
                 hours_break = round(break_time.total_seconds() / 3600, 2)
+        else:
+            break_in_time = None
+            break_out_time = None
+            hours_break = 0
     else:
         break_in_time = None
+        break_out_time = None
+        hours_break = 0
+        
 
     if user_worktime is not None:
         clock_in_verification = user_worktime.clock_out is not None
         clock_in_time = user_worktime.clock_in
         clock_out_time = user_worktime.clock_out
+        hours_worked = 0
         if date_today == clock_in_time.date():
             if user_worktime.clock_out is None:
                 time_worked = now - clock_in_time
@@ -140,10 +148,11 @@ def clock(request):
             hours_worked = round(time_worked.total_seconds() / 3600, 2)
     else:
         clock_in_verification = True
-        # hours_worked = 0
+        hours_worked = 0
         clock_in_time = None
         clock_out_time = None
-
+    print(hours_worked, hours_break)
+    
     net_hours_worked = round((hours_worked - hours_break), 2)
 
     context = {
