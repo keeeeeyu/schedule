@@ -8,7 +8,7 @@
 
         <h1>Welcome {{ first_name }}</h1>
         <h1>{{ now }}</h1>
-        <p id="location"></p>
+        <h1 id="location"></h1>
     </div>
     
     <div class="column2">
@@ -66,28 +66,7 @@
         <hr>
     </div>
 </div>
-<script>
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
 
-    function showPosition(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        // You may use an external service to reverse geocode the coordinates to get location information.
-        // For simplicity, let's just display the coordinates in this example.
-        const locationInfo = `Latitude: ${latitude}, Longitude: ${longitude}`;
-        document.getElementById("location").innerText = locationInfo;
-    }
-
-    // Call the getLocation function when the page loads
-    getLocation();
-</script>
 
 
 
