@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
 from django.http import JsonResponse
+from django.conf import settings
+import requests
 
 
 # Create your views here.
@@ -19,6 +21,31 @@ def calculate_week_dates(date_today, day_count):
                   timedelta(days=day_count + i) for i in range(7)]
     return week_dates
 
+def get_user_location(request):
+    if request.method == 'GET':
+        try:
+            latitude = request.GET.get('latitude')
+            longitude = request.GET.get('longitude')
+            print(latitude,longitude)
+            # Call the geocoding API
+            api_key = settings.MAPQUEST_API_KEY
+            api_url = f'https://www.mapquestapi.com/geocoding/v1/reverse?key={api_key}&location={latitude},{longitude}&includeRoadMetadata=true&includeNearestIntersection=true'
+            
+            response = requests.get(api_url)
+            data = response.json()
+
+            # Extract city and state information from the geocoding API response
+            city = data['results'][0]['locations'][0]['adminArea5']
+            state = data['results'][0]['locations'][0]['adminArea3']
+
+            # Send the city and state information as JSON response
+            return JsonResponse({'city': city, 'state': state})
+
+        except Exception as e:
+            print('Error:', e)
+            return JsonResponse({'error': 'Internal server error'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 @login_required
 def home(request):

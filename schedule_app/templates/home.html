@@ -13,43 +13,31 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      // Get user's location using Geolocation API
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
       function successCallback(position) {
-        console.log(position)
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          // Call the API with latitude and longitude
-          callGeocodingAPI(latitude, longitude);
+
+          // Make a POST request to the Django backend with user's location
+          fetch(`/get_user_location/?latitude=${latitude}&longitude=${longitude}`)
+          .then(response => response.json())
+          .then(data => {
+              const { city, state } = data;
+              document.getElementById('location').textContent = `${city}, ${state}`;
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              document.getElementById('location').textContent = 'Error fetching location information';
+          });
       }
-      
+
       function errorCallback(error) {
           console.error('Error getting user location:', error.message);
           document.getElementById('location').textContent = 'Error getting user location';
       }
-      
-      function callGeocodingAPI(latitude, longitude) {
-          const apiKey = 'GwEZt0gtcceBG1XniKkTI2BYE6nhQaMu';
-          const apiUrl = `https://www.mapquestapi.com/geocoding/v1/reverse?key=${apiKey}&location=${latitude},${longitude}&includeRoadMetadata=true&includeNearestIntersection=true`;
-
-            fetch(apiUrl)
-              .then(response => response.json())
-              .then(data => {
-                // Extract state information from the API response
-                const state = data.results[0]?.locations[0]?.adminArea3;
-                const city = data.results[0]?.locations[0]?.adminArea5;
-
-                console.log(city, state);
-                // Update HTML to display the state
-                document.getElementById('location').textContent = `${city}, ${state}`;
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                  document.getElementById('location').textContent = 'Error fetching state information';
-                  });
-        }
-
-    </script>
+  </script>
     <title>Schedule</title>
   </head>
   <body>

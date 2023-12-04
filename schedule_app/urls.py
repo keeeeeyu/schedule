@@ -24,4 +24,5 @@ urlpatterns = [
     path('schedule/create_shift/', views.create_shift, name='create_shift'),
     path('schedule/add_shift/', views.add_shift, name='add_shift'),
     path('schedule/', views.getAllShifts, name='get_all_shifts'),
+    path('get_user_location/', views.get_user_location, name='get_user_location'),
 ]
