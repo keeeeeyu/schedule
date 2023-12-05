@@ -148,6 +148,10 @@ def clock(request):
                 break_out_time = user_breaktime.break_out
                 break_time = break_out_time - break_in_time
                 hours_break = round(break_time.total_seconds() / 3600, 2)
+        elif user_breaktime.break_out is not None:
+            break_out_time = user_breaktime.break_out
+            break_time = break_out_time - break_in_time
+            hours_break = round(break_time.total_seconds() / 3600, 2) 
         else:
             break_in_time = None
             break_out_time = None
@@ -173,6 +177,9 @@ def clock(request):
         elif user_worktime.clock_out is None:
             time_worked = now - clock_in_time
             hours_worked = round(time_worked.total_seconds() / 3600, 2)
+        elif user_worktime.clock_out is not None:
+            time_worked = clock_out_time - clock_in_time
+            hours_worked = round(time_worked.total_seconds() / 3600, 2) 
     else:
         clock_in_verification = True
         hours_worked = 0
