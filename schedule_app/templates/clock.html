@@ -15,24 +15,24 @@
         
         {% if clock_in_verification %}
     
-        <form method="post" action="{% url 'clock_in' %}" id="clockForm">
+        <form method="post" action="{% url 'clock_in' %}" id="clockInForm">
             {% csrf_token %}
-            <button class="clock-button" type="button" onclick="getUserLocation()">Clock In</button>
+            <button class="clock-button" type="button" onclick="getUserLocation('clockInForm')">Clock In</button>
           </form>
 
         {% else %}
 
-            <form action="{% url 'clock_out' %}" method="POST" id="clockForm">
+            <form action="{% url 'clock_out' %}" method="POST" id="clockOutForm">
                 {% csrf_token %}
-                <button class="clock-button" type="button" onclick="getUserLocation()">Clock Out</button>
+                <button class="clock-button" type="button" onclick="getUserLocation('clockOutForm')">Clock Out</button>
             </form>
 
         {% endif %}
 
-        <form action="{% url 'break_time' %}" method="POST">
+        <form action="{% url 'break_time' %}" method="POST" id="breakForm">
             {% csrf_token %}
         
-                <button class="clock-button" type="submit">Break In</button>    
+                <button class="clock-button" type="button" onclick="getUserLocation('breakForm')">Break In</button>    
             
         </form>
         <h2>

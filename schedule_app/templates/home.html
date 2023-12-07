@@ -14,7 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
-function getUserLocation() {
+function getUserLocation(formId) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function (position) {
@@ -24,9 +24,9 @@ function getUserLocation() {
             userLocationInput.type = 'hidden';
             userLocationInput.name = 'user_location';
             userLocationInput.value = userLocation;
-            document.getElementById('clockForm').appendChild(userLocationInput);
+            document.getElementById(formId).appendChild(userLocationInput);
             // Explicitly submit the form
-            document.getElementById('clockForm').submit();
+            document.getElementById(formId).submit();
           },
           function (error) {
             console.error('Error getting location:', error);

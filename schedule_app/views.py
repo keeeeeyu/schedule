@@ -272,7 +272,7 @@ def clock_in(request):
                     messages.error(request, 'You are not within the allowed radius to clock in.')
             else:
                 messages.error(request, 'Unable to retrieve your location. Make sure location services are enabled.')
-                
+
     return redirect('clock')
 
 
@@ -308,26 +308,39 @@ def break_time(request):
     first_name = request.user.first_name.capitalize()
     last_entry = User_breaktime.objects.filter(user=request.user).last()
     time_now = timezone.localtime().strftime("%I:%M %p")
+
     if request.method == 'POST':
-        if last_entry is None or last_entry.break_out and last_entry.break_in is not None:
-            user = request.user
-            out = timezone.localtime()
-            print(datetime.now(), "LOOOOOK")
-            break_in = User_breaktime.objects.create(
-                user=user, date=datetime.now(), break_in=out)
-            break_in.save()
-            messages.success(
-                request, f'Break in ({time_now}) successful.')
-            return redirect('clock')
-        elif last_entry.break_out == None:
-            out = User_breaktime.objects.get(id=last_entry.id)
-            break_out = timezone.localtime()
-            out.break_out = break_out
-            out.save()
-            print(messages)
-            messages.success(
-                request, f'Break out ({time_now}) successful.')
-            return redirect('clock')
+        user_location = request.POST.get('user_location', None)
+        if user_location:
+            target_location = (settings.TARGET_LOCATION['latitude'], settings.TARGET_LOCATION['longitude'])
+            print('check 2')
+            user_location = tuple(map(float, user_location.split(',')))
+            distance_to_target = geodesic(user_location, target_location).miles
+            if distance_to_target <= 10.0: 
+                if last_entry is None or (last_entry.break_out and last_entry.break_in is not None):
+                    user = request.user
+                    out = timezone.localtime()
+                    print(datetime.now(), "LOOOOOK")
+                    break_in = User_breaktime.objects.create(
+                        user=user, date=datetime.now(), break_in=out)
+                    break_in.save()
+                    messages.success(
+                        request, f'Break in ({time_now}) successful.')
+                    return redirect('clock')
+                elif last_entry.break_out == None:
+                    out = User_breaktime.objects.get(id=last_entry.id)
+                    break_out = timezone.localtime()
+                    out.break_out = break_out
+                    out.save()
+                    print(messages)
+                    messages.success(
+                        request, f'Break out ({time_now}) successful.')
+                    return redirect('clock')
+            else:
+                messages.error(request, 'You are not within the allowed radius to Break.')
+        else:
+            messages.error(request, 'Unable to retrieve your location. Make sure location services are enabled.')
+
     return render(request, 'break.html', {'first_name': first_name})
 
 
