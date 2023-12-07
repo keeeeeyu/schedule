@@ -12,9 +12,17 @@ from datetime import timedelta, datetime
 from django.http import JsonResponse
 from django.conf import settings
 import requests
+from geopy.distance import geodesic
 
-
+target_latitude = 0
+target_longitude = 0
 # Create your views here.
+def is_within_radius(user_latitude, user_longitude, target_latitude, target_longitude):
+    user_location = (user_latitude, user_longitude)
+    target_location = (target_latitude, target_longitude)
+    distance = geodesic(user_location, target_location).miles
+    return distance <= 10
+
 def calculate_week_dates(date_today, day_count):
     start_of_week = date_today - timedelta(days=date_today.weekday())
     week_dates = [start_of_week +
@@ -56,7 +64,7 @@ def home(request):
     start_of_week = date_today - timedelta(days=date_today.weekday())
     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
     day_count = request.session.get('day_count', 0)
-
+    
     if request.method == "POST":
         if 'next_week' in request.POST:
             request.session['day_count'] = day_count + 7
