@@ -19,7 +19,12 @@
       function successCallback(position) {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-
+          
+          // Passing latitude and longitude to clock in, out, and break time.
+          fetch(`/clock_in/?latitude=${latitude}&longitude=${longitude}`)
+          fetch(`/clock_out/?latitude=${latitude}&longitude=${longitude}`)
+          fetch(`/break_time/?latitude=${latitude}&longitude=${longitude}`)
+          
           // Make a POST request to the Django backend with user's location
           fetch(`/get_user_location/?latitude=${latitude}&longitude=${longitude}`)
           .then(response => response.json())
