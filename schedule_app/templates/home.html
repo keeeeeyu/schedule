@@ -24,9 +24,9 @@ function getUserLocation() {
             userLocationInput.type = 'hidden';
             userLocationInput.name = 'user_location';
             userLocationInput.value = userLocation;
-            document.getElementById('clockInForm').appendChild(userLocationInput);
+            document.getElementById('clockForm').appendChild(userLocationInput);
             // Explicitly submit the form
-            document.getElementById('clockInForm').submit();
+            document.getElementById('clockForm').submit();
           },
           function (error) {
             console.error('Error getting location:', error);

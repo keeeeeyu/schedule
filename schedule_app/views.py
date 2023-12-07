@@ -272,21 +272,34 @@ def clock_in(request):
                     messages.error(request, 'You are not within the allowed radius to clock in.')
             else:
                 messages.error(request, 'Unable to retrieve your location. Make sure location services are enabled.')
+                
     return redirect('clock')
 
 
 @login_required
 def clock_out(request):
     if request.method == 'POST':
+        user_location = request.POST.get('user_location', None) 
         last_entry = User_worktime.objects.filter(user=request.user).last()
-        if last_entry.clock_out is None:
-            clock_out_time = timezone.localtime()
-            last_entry.clock_out = clock_out_time
-            last_entry.save()
-            messages.success(
-                request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
+        if user_location:
+            target_location = (settings.TARGET_LOCATION['latitude'], settings.TARGET_LOCATION['longitude'])
+            print('check 2')
+            user_location = tuple(map(float, user_location.split(',')))
+            distance_to_target = geodesic(user_location, target_location).miles
+            if distance_to_target <= 10.0:
+                if last_entry.clock_out is None:
+                    clock_out_time = timezone.localtime()
+                    last_entry.clock_out = clock_out_time
+                    last_entry.save()
+                    messages.success(
+                        request, f'Clock-out ({timezone.localtime(clock_out_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
+                else:
+                    messages.error(request, 'You are already clocked out.')
+            else:
+                messages.error(request, 'You are not within the allowed radius to clock out.')
         else:
-            messages.error(request, 'You are already clocked out.')
+            messages.error(request, 'Unable to retrieve your location. Make sure location services are enabled.')
+
     return redirect('clock')
 
 
