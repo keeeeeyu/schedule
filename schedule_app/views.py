@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -14,14 +15,34 @@ from django.conf import settings
 import requests
 from geopy.distance import geodesic
 
-target_latitude = 0
-target_longitude = 0
 # Create your views here.
-def is_within_radius(user_latitude, user_longitude, target_latitude, target_longitude):
-    user_location = (user_latitude, user_longitude)
-    target_location = (target_latitude, target_longitude)
-    distance = geodesic(user_location, target_location).miles
-    return distance <= 10
+# def get_user_location(request, latitude, longitude):
+#     print(latitude, longitude,'get user locatino check')
+#     target_latitude = settings.TARGET_LOCATION['latitude']
+#     target_longitude = settings.TARGET_LOCATION['longitude']
+
+#     if user_latitude is not None and user_longitude is not None:
+#             try:
+#                 user_latitude = float(user_latitude)
+#                 user_longitude = float(user_longitude)
+#                 print(user_latitude, 'checking if statement')
+#             except ValueError:
+#                 # Handle the case where latitude or longitude is not a valid float
+#                 return False  # or handle it according to your requirements
+#             is_within_radius_result = is_within_radius(user_latitude, user_longitude, target_latitude, target_longitude)
+            
+#             return is_within_radius_result
+#     return JsonResponse({'latitude': latitude, 'longitude': longitude})
+
+    
+
+# def is_within_radius(user_latitude, user_longitude, target_latitude, target_longitude):
+#     print('is within radius')
+#     user_location = (user_latitude, user_longitude)
+#     target_location = (target_latitude, target_longitude)
+#     distance = geodesic(user_location, target_location).miles
+#     return distance <= 10
+
 
 def calculate_week_dates(date_today, day_count):
     start_of_week = date_today - timedelta(days=date_today.weekday())
@@ -29,7 +50,7 @@ def calculate_week_dates(date_today, day_count):
                   timedelta(days=day_count + i) for i in range(7)]
     return week_dates
 
-def get_user_location(request):
+def api_call(request):
     if request.method == 'GET':
         try:
             latitude = request.GET.get('latitude')
@@ -158,6 +179,7 @@ def clock(request):
                 hours_break = round(break_time.total_seconds() / 3600, 2)
         elif user_breaktime.break_out is not None:
             break_out_time = user_breaktime.break_out
+            break_in_time = user_breaktime.break_in
             break_time = break_out_time - break_in_time
             hours_break = round(break_time.total_seconds() / 3600, 2) 
         else:
@@ -216,27 +238,40 @@ def clock(request):
 @login_required
 def clock_in(request):
     if request.method == 'POST':
-        first_entry = User_worktime.objects.filter(user=request.user).first()
-        last_entry = User_worktime.objects.filter(user=request.user).last()
-        print('last entry', first_entry)
-        if first_entry is None:
-            user = request.user
-            clock_in_time = timezone.localtime()
-            clocked_in = User_worktime.objects.create(
-                user=user, date=datetime.now(), clock_in=clock_in_time)
-            clocked_in.save()
-            messages.success(
-                request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
-        elif last_entry.clock_in and last_entry.clock_out is not None:
-            user = request.user
-            clock_in_time = timezone.localtime()
-            clocked_in = User_worktime.objects.create(
-                user=user, date=datetime.now(), clock_in=clock_in_time)
-            clocked_in.save()
-            messages.success(
-                request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
-        else:
-            messages.error(request, 'You are already clocked in.')
+            user_location = request.POST.get('user_location', None)
+            print(user_location)
+
+            if user_location:
+                target_location = (settings.TARGET_LOCATION['latitude'], settings.TARGET_LOCATION['longitude'])
+                print('check 2')
+                user_location = tuple(map(float, user_location.split(',')))
+                distance_to_target = geodesic(user_location, target_location).miles
+                if distance_to_target <= 10.0:
+                    first_entry = User_worktime.objects.filter(user=request.user).first()
+                    last_entry = User_worktime.objects.filter(user=request.user).last()
+                    print('last entry', first_entry)
+                    if first_entry is None:
+                        user = request.user
+                        clock_in_time = timezone.localtime()
+                        clocked_in = User_worktime.objects.create(
+                            user=user, date=datetime.now(), clock_in=clock_in_time)
+                        clocked_in.save()
+                        messages.success(
+                            request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
+                    elif last_entry.clock_in and last_entry.clock_out is not None:
+                        user = request.user
+                        clock_in_time = timezone.localtime()
+                        clocked_in = User_worktime.objects.create(
+                            user=user, date=datetime.now(), clock_in=clock_in_time)
+                        clocked_in.save()
+                        messages.success(
+                            request, f'Clock-in ({timezone.localtime(clock_in_time).strftime("%Y-%m-%d %H:%M:%S")}) successful.')
+                    else:
+                        messages.error(request, 'You are already clocked in.')
+                else:
+                    messages.error(request, 'You are not within the allowed radius to clock in.')
+            else:
+                messages.error(request, 'Unable to retrieve your location. Make sure location services are enabled.')
     return redirect('clock')
 
 

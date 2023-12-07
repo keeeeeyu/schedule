@@ -13,20 +13,41 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Get user's location using Geolocation API
+
+function getUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const userLocation = `${position.coords.latitude},${position.coords.longitude}`;
+            // Add a hidden input field to the form to pass the user's location
+            const userLocationInput = document.createElement('input');
+            userLocationInput.type = 'hidden';
+            userLocationInput.name = 'user_location';
+            userLocationInput.value = userLocation;
+            document.getElementById('clockInForm').appendChild(userLocationInput);
+            // Explicitly submit the form
+            document.getElementById('clockInForm').submit();
+          },
+          function (error) {
+            console.error('Error getting location:', error);
+            alert('Unable to retrieve your location. Make sure location services are enabled.');
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
+    }
+
+            // Get user's location using Geolocation API
+      
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
       function successCallback(position) {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          
-          // Passing latitude and longitude to clock in, out, and break time.
-          fetch(`/clock_in/?latitude=${latitude}&longitude=${longitude}`)
-          fetch(`/clock_out/?latitude=${latitude}&longitude=${longitude}`)
-          fetch(`/break_time/?latitude=${latitude}&longitude=${longitude}`)
-          
+
           // Make a POST request to the Django backend with user's location
-          fetch(`/get_user_location/?latitude=${latitude}&longitude=${longitude}`)
+          fetch(`/api_call/?latitude=${latitude}&longitude=${longitude}`)
           .then(response => response.json())
           .then(data => {
               const { city, state } = data;
@@ -36,12 +57,12 @@
               console.error('Error:', error);
               document.getElementById('location').textContent = 'Error fetching location information';
           });
-      }
+      };
 
       function errorCallback(error) {
           console.error('Error getting user location:', error.message);
           document.getElementById('location').textContent = 'Error getting user location';
-      }
+      };
   </script>
     <title>Schedule</title>
   </head>

@@ -15,10 +15,10 @@
         
         {% if clock_in_verification %}
     
-            <form action="{% url 'clock_in' %}" method="POST">
-                {% csrf_token %}
-                <button class="clock-button" type="submit">Clock In</button>
-            </form>
+        <form method="post" action="{% url 'clock_in' %}" id="clockInForm">
+            {% csrf_token %}
+            <button class="clock-button" type="button" onclick="getUserLocation()">Clock In</button>
+          </form>
 
         {% else %}
 
