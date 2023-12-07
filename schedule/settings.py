@@ -127,3 +127,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Target Location, can change this anytime.
+TARGET_LOCATION = {
+    'latitude': 47.5410085,
+    'longitude': -122.164465,
+}
